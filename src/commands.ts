@@ -36,11 +36,13 @@ const commands: Array<Command> = [
 
             data = await youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
 
-            if(data == undefined) { msg.reply('Error with Google API'); return;}
+            if(data == undefined) { msg.reply('Error with Google API'); return }
+
+            //! add checking here
 
             link += data.data.items[0].id.videoId;
             videoName = data.data.items[0].snippet.title;
-            msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
+            msg.channel.send(link);
 
             musicGuild.addSong({
                 link    : link,
