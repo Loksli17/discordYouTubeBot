@@ -44,20 +44,23 @@ const commands: Array<Command> = [
             videoName = data.data.items[0].snippet.title;
             msg.channel.send(link);
 
-            musicGuild.addSong({
+            let song: Song = {
                 link    : link,
                 duration: '00:00',
                 name    : videoName,
-            });
+            };
+
+            musicGuild.addSong(song);
 
             if(!MusicGuild.isPlaying){
 
                 MusicGuild.isPlaying = true;
                 connection = await channel?.join().catch(error => console.error(error));
 
-                if(connection == undefined){ msg.reply('Error with connection'); return; }
+                if(connection == undefined) { msg.reply('Error with connection'); return; }
 
-                musicGuild.play(connection, msg);
+                MusicGuild.connection = connection;
+                musicGuild.play(song, msg);
             }
  
         }, 
@@ -75,7 +78,9 @@ const commands: Array<Command> = [
         name : 'prev',
         about: 'Command for pause audio',
         out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
-
+            let song: Song | undefined = musicGuild.prevSong();
+            if(song == undefined) { msg.reply('No songs'); return; }
+            musicGuild.play(song, msg);
         }
     },
 
@@ -83,7 +88,9 @@ const commands: Array<Command> = [
         name : 'next',
         about: 'Command for pause audio',
         out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
-
+            let song: Song | undefined = musicGuild.nextSong();
+            if(song == undefined) { msg.reply('No more songs'); return; }
+            musicGuild.play(song, msg);
         }
     },
 
@@ -91,7 +98,8 @@ const commands: Array<Command> = [
         name : 'current',
         about: 'Command for send current audio',
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
-            msg.channel.send('Now playing smth');
+            let song: Song | undefined = musicGuild.currentSong();
+            if(song == undefined) { msg.reply('No more songs'); return; }
         },
     },
 
@@ -99,7 +107,7 @@ const commands: Array<Command> = [
         name : 'queue', 
         about: 'Command for send qeueu',
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
-            msg.channel.send(`${['ahaha', 'ahah', 'haha']}`);
+            msg.channel.send(`${musicGuild.queue}`);
         },
     }
 ];

@@ -6,26 +6,35 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const ytdl_core_1 = __importDefault(require("ytdl-core"));
 class MusicGuild {
     constructor() {
-        this.queue = [];
+        this.queue_ = [];
     }
     addSong(song) {
-        this.queue.push(song);
+        this.queue_.push(song);
     }
     nextSong() {
-        if (MusicGuild.currentIndex + 1 == this.queue.length)
+        if (MusicGuild.currentIndex + 1 == this.queue_.length)
             return undefined;
         MusicGuild.currentIndex++;
-        return this.queue[MusicGuild.currentIndex];
+        return this.queue_[MusicGuild.currentIndex];
     }
     prevSong() {
         if (MusicGuild.currentIndex - 1 == 0)
             return undefined;
         MusicGuild.currentIndex--;
-        return this.queue[MusicGuild.currentIndex];
+        return this.queue_[MusicGuild.currentIndex];
     }
-    play(connection, msg) {
-        const song = this.queue[MusicGuild.currentIndex], dispatcher = connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
-        console.log(song, 'azazazaa');
+    currentSong() {
+        if (MusicGuild.currentIndex - 1 == 0)
+            return undefined;
+        return this.queue_[MusicGuild.currentIndex];
+    }
+    get queue() {
+        return this.queue_;
+    }
+    play(song, msg) {
+        if (MusicGuild.connection == undefined)
+            return;
+        const dispatcher = MusicGuild.connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
         dispatcher.on('start', () => {
             msg.channel.send(`--- Now playing ${song.name} ---`);
         });
@@ -39,7 +48,7 @@ class MusicGuild {
                 MusicGuild.currentIndex++; //! it can be ERORR ATTENTION
                 return;
             }
-            this.play(connection, msg);
+            this.play(nextSong, msg);
         });
     }
 }

@@ -31,15 +31,16 @@ const commands = [
                 msg.reply('Error with Google API');
                 return;
             }
+            //! add checking here
             link += data.data.items[0].id.videoId;
             videoName = data.data.items[0].snippet.title;
-            msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
-            musicGuild.addSong({
+            msg.channel.send(link);
+            let song = {
                 link: link,
                 duration: '00:00',
                 name: videoName,
-            });
-            console.log(MusicGuild_1.default.isPlaying);
+            };
+            musicGuild.addSong(song);
             if (!MusicGuild_1.default.isPlaying) {
                 MusicGuild_1.default.isPlaying = true;
                 connection = yield (channel === null || channel === void 0 ? void 0 : channel.join().catch(error => console.error(error)));
@@ -47,7 +48,8 @@ const commands = [
                     msg.reply('Error with connection');
                     return;
                 }
-                musicGuild.play(connection, msg);
+                MusicGuild_1.default.connection = connection;
+                musicGuild.play(song, msg);
             }
         }),
     },
@@ -61,26 +63,43 @@ const commands = [
         name: 'prev',
         about: 'Command for pause audio',
         out: (bot, msg, words) => {
+            let song = musicGuild.prevSong();
+            if (song == undefined) {
+                msg.reply('No songs');
+                return;
+            }
+            musicGuild.play(song, msg);
         }
     },
     {
         name: 'next',
         about: 'Command for pause audio',
         out: (bot, msg, words) => {
+            let song = musicGuild.nextSong();
+            if (song == undefined) {
+                msg.reply('No more songs');
+                return;
+            }
+            musicGuild.play(song, msg);
         }
     },
     {
         name: 'current',
         about: 'Command for send current audio',
         out: (bot, msg, words) => {
-            msg.channel.send('Now playing smth');
+            let song = musicGuild.currentSong();
+            if (song == undefined) {
+                msg.reply('No more songs');
+                return;
+            }
+            musicGuild.play(song, msg);
         },
     },
     {
         name: 'queue',
         about: 'Command for send qeueu',
         out: (bot, msg, words) => {
-            msg.channel.send(`${['ahaha', 'ahah', 'haha']}`);
+            msg.channel.send(`${musicGuild.queue}`);
         },
     }
 ];

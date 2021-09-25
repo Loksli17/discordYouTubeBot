@@ -11,30 +11,42 @@ export interface Song{
 export default class MusicGuild{
 
     public static isPlaying   : boolean     = false;
-    private       queue       : Array<Song> = [];
+    private       queue_       : Array<Song> = [];
     public static currentIndex: number      = 0;
+    public static connection  : Discord.VoiceConnection | undefined | void;
 
     public addSong(song: Song): void{
-        this.queue.push(song);
+        this.queue_.push(song);
     }
 
     public nextSong(): Song | undefined{
-        if(MusicGuild.currentIndex + 1 == this.queue.length) return undefined;
+        if(MusicGuild.currentIndex + 1 == this.queue_.length) return undefined;
         MusicGuild.currentIndex++;
-        return this.queue[MusicGuild.currentIndex];
+        return this.queue_[MusicGuild.currentIndex];
     }
 
     public prevSong(): Song | undefined{
-        if(MusicGuild.currentIndex - 1 == 0) return undefined;
+        if(MusicGuild.currentIndex - 1 == -1) return undefined;
         MusicGuild.currentIndex--;
-        return this.queue[MusicGuild.currentIndex];
+        return this.queue_[MusicGuild.currentIndex];
     }
 
-    public play(connection: Discord.VoiceConnection, msg: Discord.Message): void{
+    //! here bad way
+    public currentSong(): Song | undefined{
+        if(MusicGuild.currentIndex - 1 == 0) return undefined;
+        return this.queue_[MusicGuild.currentIndex];
+    }
+
+    public get queue(): Array<Song>{
+        return this.queue_;
+    }
+
+
+    public play(song: Song, msg: Discord.Message): void{
+
+        if(MusicGuild.connection == undefined) return;
         
-        const
-            song      : Song                     = this.queue[MusicGuild.currentIndex],
-            dispatcher: Discord.StreamDispatcher = connection.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
+        const dispatcher: Discord.StreamDispatcher = MusicGuild.connection!.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
 
         dispatcher.on('start', () => {
             msg.channel.send(`--- Now playing ${song.name} ---`);
@@ -53,7 +65,7 @@ export default class MusicGuild{
                 return;
             }
 
-            this.play(connection, msg);    
+            this.play(nextSong, msg);    
         });
     }
 }
