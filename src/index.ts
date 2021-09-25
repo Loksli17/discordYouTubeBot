@@ -1,6 +1,7 @@
 import config              from './config';
 import Discord, {Intents}  from 'discord.js'
 import commands, {Command} from './commands';
+import configChipher       from './configChipher';
 
 const main = () => {
 
@@ -27,7 +28,7 @@ const main = () => {
         });
     });
 
-    bot.login(config.token);
+    bot.login(configChipher.token);
 }
 
 main();

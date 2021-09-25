@@ -25,6 +25,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const config_1 = __importDefault(require("./config"));
 const discord_js_1 = __importStar(require("discord.js"));
 const commands_1 = __importDefault(require("./commands"));
+const configChipher_1 = __importDefault(require("./configChipher"));
 const main = () => {
     const intents = [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.GUILD_MESSAGES], bot = new discord_js_1.default.Client({ intents: [intents] });
     bot.on('ready', () => {
@@ -42,6 +43,6 @@ const main = () => {
                 command.out(bot, msg, words);
         });
     });
-    bot.login(config_1.default.token);
+    bot.login(configChipher_1.default.token);
 };
 main();
