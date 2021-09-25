@@ -19,7 +19,8 @@ const commands: Array<Command> = [
     {
         name: 'play',
 
-        out : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
+        //! REFACTOR THIS BEFORE ANOTHER CODING !!!!!!
+        out : async (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
             let channel = msg.member!.voice.channel;
 
@@ -31,10 +32,14 @@ const commands: Array<Command> = [
                 
                 channel?.join().then(async (connection: Discord.VoiceConnection) => {
             
-                    const playing = connection.play(ytdl(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`, {quality: 'highestaudio'}));
-
-                    playing.on('finish', () => {
-                        msg.channel.send('video end');
+                    const dispatcher = connection.play(ytdl(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`, {
+                        highWaterMark: 1024 * 1024 * 10
+                    }))
+                    .on('start', () => {
+                        msg.channel.send(`--- Now playing ${data.data.items[0].snippet.title} ---`);
+                    })
+                    .on('finish', () => {
+                        msg.channel.send(`--- End playing of ${data.data.items[0].snippet.title} ---`);
                     });
                 })
             });
@@ -42,6 +47,24 @@ const commands: Array<Command> = [
 
         about: 'Command for play youtube video',
     },
+
+    {
+        name: 'current',
+
+        out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
+            msg.channel.send('Now playing smth');
+        },
+
+        about: 'Command for send current audio',
+    },
+
+    {
+        name : 'queue', 
+        about: 'Command for send qeueu',
+        out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
+            msg.channel.send(`${['ahaha', 'ahah', 'haha']}`);
+        },
+    }
 ];
 
 export default commands;

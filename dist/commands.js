@@ -21,32 +21,41 @@ const youtube = googleapis_1.google.youtube({
 const commands = [
     {
         name: 'play',
-        out: (bot, msg, words) => {
+        //! REFACTOR THIS BEFORE ANOTHER CODING !!!!!!
+        out: (bot, msg, words) => __awaiter(void 0, void 0, void 0, function* () {
             let channel = msg.member.voice.channel;
             youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }, (error, data) => {
                 console.log(error);
                 msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
                 console.log(data.data.items[0].snippet.title);
                 channel === null || channel === void 0 ? void 0 : channel.join().then((connection) => __awaiter(void 0, void 0, void 0, function* () {
-                    // const songInfo = await ytdl.getInfo(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
-                    const playing = connection.play(ytdl_core_1.default(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`, { quality: 'highestaudio' }));
-                    playing.on('finish', () => {
-                        msg.channel.send('video end');
+                    const dispatcher = connection.play(ytdl_core_1.default(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`, {
+                        highWaterMark: 1024 * 1024 * 10
+                    }))
+                        .on('start', () => {
+                        msg.channel.send(`--- Now playing ${data.data.items[0].snippet.title} ---`);
+                    })
+                        .on('finish', () => {
+                        msg.channel.send(`--- End playing of ${data.data.items[0].snippet.title} ---`);
                     });
-                    // console.log(ytdl(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`, { 
-                    //     quality: 'highestaudio',
-                    //     highWaterMark: 1024 * 1024 * 10
-                    // }));
-                    // value.play(
-                    //     ytdl(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`, { 
-                    //         quality: 'highestaudio',
-                    //         highWaterMark: 1024 * 1024 * 10
-                    //     }
-                    // ));
                 }));
             });
-        },
+        }),
         about: 'Command for play youtube video',
     },
+    {
+        name: 'current',
+        out: (bot, msg, words) => {
+            msg.channel.send('Now playing smth');
+        },
+        about: 'Command for send current audio',
+    },
+    {
+        name: 'queue',
+        about: 'Command for send qeueu',
+        out: (bot, msg, words) => {
+            msg.channel.send(`${['ahaha', 'ahah', 'haha']}`);
+        },
+    }
 ];
 exports.default = commands;
