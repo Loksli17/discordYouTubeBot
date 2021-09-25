@@ -13,11 +13,12 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const googleapis_1 = require("googleapis");
-const ytdl_core_1 = __importDefault(require("ytdl-core"));
+const MusicGuild_1 = __importDefault(require("./MusicGuild"));
 const youtube = googleapis_1.google.youtube({
     auth: 'AIzaSyCMJGB1MaBgoN78v8PkmuMEJOLs6_CYHME',
     version: 'v3'
 });
+const musicGuild = new MusicGuild_1.default();
 const commands = [
     {
         name: 'play',
@@ -32,18 +33,34 @@ const commands = [
             link += data.data.items[0].id.videoId;
             videoName = data.data.items[0].snippet.title;
             msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
-            connection = yield (channel === null || channel === void 0 ? void 0 : channel.join().catch(error => console.error(error)));
-            if (connection == undefined) {
-                msg.reply('Error with connection');
-                return;
+            musicGuild.addSong({
+                link: link,
+                duration: '00:00',
+                name: videoName,
+            });
+            if (!MusicGuild_1.default.isPlaying) {
+                MusicGuild_1.default.isPlaying = true;
+                connection = yield (channel === null || channel === void 0 ? void 0 : channel.join().catch(error => console.error(error)));
+                if (connection == undefined) {
+                    msg.reply('Error with connection');
+                    return;
+                }
+                musicGuild.play(connection, msg);
+                // let dispatcher: Discord.StreamDispatcher = connection.play(ytdl(link), {highWaterMark: 1024 * 1024 * 10});
+                // dispatcher.on('start', () => {
+                //     msg.channel.send(`--- Now playing ${videoName} ---`);
+                // });
+                // dispatcher.on('finish', () => {
+                //     msg.channel.send(`--- End playing of ${videoName} ---`);
+                //     const song: Song | undefined = musicGuild.nextSong();
+                //     if(song == undefined){
+                //         //leave
+                //         msg.channel.send(`--- No more songs !! ---`);
+                //         return;
+                //     }
+                //     // connection.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
+                // });
             }
-            const dispatcher = connection.play(ytdl_core_1.default(link), { highWaterMark: 1024 * 1024 * 10 });
-            dispatcher.on('start', () => {
-                msg.channel.send(`--- Now playing ${videoName} ---`);
-            });
-            dispatcher.on('finish', () => {
-                msg.channel.send(`--- End playing of ${videoName} ---`);
-            });
         }),
     },
     {
