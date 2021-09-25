@@ -7,11 +7,11 @@ const main = () => {
 
     const 
         intents: Array<number>  = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
-        bot    : Discord.Client = new Discord.Client({ intents: [intents] });
+        bot    : Discord.Client = new Discord.Client();
 
     bot.on('ready', () => console.log('I am working!'));
 
-    bot.on('messageCreate', (msg: Discord.Message) => {
+    bot.on('message', (msg: Discord.Message) => {
         
         if(msg.author.username == bot.user?.username || bot.user?.discriminator == msg.author.discriminator) return;
 

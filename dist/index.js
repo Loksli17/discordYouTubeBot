@@ -27,9 +27,9 @@ const discord_js_1 = __importStar(require("discord.js"));
 const commands_1 = __importDefault(require("./commands"));
 const configChipher_1 = __importDefault(require("./configChipher"));
 const main = () => {
-    const intents = [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.GUILD_MESSAGES], bot = new discord_js_1.default.Client({ intents: [intents] });
+    const intents = [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.GUILD_MESSAGES], bot = new discord_js_1.default.Client();
     bot.on('ready', () => console.log('I am working!'));
-    bot.on('messageCreate', (msg) => {
+    bot.on('message', (msg) => {
         var _a, _b;
         if (msg.author.username == ((_a = bot.user) === null || _a === void 0 ? void 0 : _a.username) || ((_b = bot.user) === null || _b === void 0 ? void 0 : _b.discriminator) == msg.author.discriminator)
             return;
