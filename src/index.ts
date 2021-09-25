@@ -16,10 +16,11 @@ const main = () => {
 
         //! FIX THIS SHIT !!!
         let
-            reg            : RegExp        = new RegExp(`^${config.prefix}`, 'g'),
-            prefix         : string        = msg.content.match(reg)![0],
-            words          : Array<string> = msg.content.split(" "),
-            userCommandName: string        = words[0].substr(1, words[0].length);
+            reg            : RegExp                  = new RegExp(`^${config.prefix}`, 'g'),
+            resultArr      : RegExpMatchArray | null = msg.content.match(reg),
+            prefix         : string                  = resultArr == null ? "" : resultArr[0],
+            words          : Array<string>           = msg.content.split(" "),
+            userCommandName: string                  = words[0].substr(1, words[0].length);
 
         if(prefix != config.prefix) return;
 

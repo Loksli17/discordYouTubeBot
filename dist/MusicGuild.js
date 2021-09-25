@@ -18,14 +18,13 @@ class MusicGuild {
         return this.queue_[MusicGuild.currentIndex];
     }
     prevSong() {
-        if (MusicGuild.currentIndex - 1 == 0)
+        if (MusicGuild.currentIndex - 1 == -1)
             return undefined;
         MusicGuild.currentIndex--;
         return this.queue_[MusicGuild.currentIndex];
     }
+    //! here bad way
     currentSong() {
-        if (MusicGuild.currentIndex - 1 == 0)
-            return undefined;
         return this.queue_[MusicGuild.currentIndex];
     }
     get queue() {

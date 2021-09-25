@@ -14,8 +14,11 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const googleapis_1 = require("googleapis");
 const MusicGuild_1 = __importDefault(require("./MusicGuild"));
+const builders_1 = require("@discordjs/builders");
+// @ts-ignore
+// import Youtube from 'simple-youtube-api';
 const youtube = googleapis_1.google.youtube({
-    auth: 'AIzaSyCMJGB1MaBgoN78v8PkmuMEJOLs6_CYHME',
+    auth: 'AIzaSyAvuEigXw3eEJz2y2u-teWWNEEYoYunBz4',
     version: 'v3'
 });
 const musicGuild = new MusicGuild_1.default();
@@ -25,7 +28,7 @@ const commands = [
         about: 'Command for play youtube video',
         // ! don't forget about try catch
         out: (bot, msg, words) => __awaiter(void 0, void 0, void 0, function* () {
-            let channel = msg.member.voice.channel, link = 'https://www.youtube.com/watch?v=', videoName = '', data, connection;
+            let channel = msg.member.voice.channel, link = 'https://www.youtube.com/watch?v=', videoName = '', data = undefined, connection;
             data = yield youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
             if (data == undefined) {
                 msg.reply('Error with Google API');
@@ -92,14 +95,24 @@ const commands = [
                 msg.reply('No more songs');
                 return;
             }
-            musicGuild.play(song, msg);
         },
     },
     {
         name: 'queue',
         about: 'Command for send qeueu',
         out: (bot, msg, words) => {
-            msg.channel.send(`${musicGuild.queue}`);
+            let message = '', songs = musicGuild.queue, start = (MusicGuild_1.default.currentIndex - 5) > 0 ? MusicGuild_1.default.currentIndex - 5 : 0, end = start + 10 > songs.length ? songs.length : start + 10;
+            console.log(start, end);
+            for (let i = start; i < end; i++) {
+                if (i == MusicGuild_1.default.currentIndex) {
+                    message = "```fix \n" + `${i}: ${songs[i].name} - ${songs[i].duration}\n` + "```\n";
+                }
+                else {
+                    message += `**${i}**: ${songs[i].name} - ${songs[i].duration}\n`;
+                }
+            }
+            console.log(message);
+            msg.channel.send(builders_1.codeBlock(message));
         },
     }
 ];

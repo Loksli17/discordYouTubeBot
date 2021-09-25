@@ -33,7 +33,6 @@ export default class MusicGuild{
 
     //! here bad way
     public currentSong(): Song | undefined{
-        if(MusicGuild.currentIndex - 1 == 0) return undefined;
         return this.queue_[MusicGuild.currentIndex];
     }
 

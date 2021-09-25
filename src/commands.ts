@@ -1,12 +1,16 @@
 import config   from './config';
-import Discord  from 'discord.js';
+import Discord, { MessageEmbed }  from 'discord.js';
 import {google, youtube_v3} from 'googleapis';
 import ytdl from 'ytdl-core';
 import { GaxiosResponse } from 'gaxios';
 import MusicGuild, { Song } from './MusicGuild';
+import { codeBlock } from '@discordjs/builders';
+// @ts-ignore
+// import Youtube from 'simple-youtube-api';
+
 
 const youtube: youtube_v3.Youtube = google.youtube({
-    auth   : 'AIzaSyCMJGB1MaBgoN78v8PkmuMEJOLs6_CYHME',
+    auth   : 'AIzaSyAvuEigXw3eEJz2y2u-teWWNEEYoYunBz4',
     version: 'v3'
 });
 
@@ -17,6 +21,8 @@ export interface Command{
     out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => void;
     about: string;
 }
+
+
 
 const commands: Array<Command> = [
     {
@@ -31,7 +37,7 @@ const commands: Array<Command> = [
                 channel   : Discord.VoiceChannel | null = msg.member!.voice.channel,
                 link      : string                      = 'https://www.youtube.com/watch?v=',
                 videoName : string                      = '',
-                data      : GaxiosResponse | void,
+                data      : GaxiosResponse | void       = undefined,
                 connection: Discord.VoiceConnection | undefined | void;
 
             data = await youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
@@ -107,7 +113,26 @@ const commands: Array<Command> = [
         name : 'queue', 
         about: 'Command for send qeueu',
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
-            msg.channel.send(`${musicGuild.queue}`);
+
+            let
+                message: string      = '',
+                songs  : Array<Song> = musicGuild.queue,
+                start  : number      = (MusicGuild.currentIndex - 5) > 0 ? MusicGuild.currentIndex - 5 : 0,
+                end    : number      = start + 10 > songs.length         ? songs.length                : start + 10;
+
+            console.log(start, end);
+
+            for(let i = start; i < end; i++){
+                if(i == MusicGuild.currentIndex){
+                    message = "```fix \n" + `${i}: ${songs[i].name} - ${songs[i].duration}\n` + "```\n"
+                }else{
+                    message += `**${i}**: ${songs[i].name} - ${songs[i].duration}\n`;
+                }
+            }
+
+            console.log(message);
+            
+            msg.channel.send(codeBlock(message));
         },
     }
 ];
