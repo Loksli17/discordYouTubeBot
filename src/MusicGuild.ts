@@ -53,10 +53,7 @@ export default class MusicGuild{
                 return;
             }
 
-            this.play(connection, msg);
-
-            // connection.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
-            
+            this.play(connection, msg);    
         });
     }
 }

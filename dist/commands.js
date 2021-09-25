@@ -39,6 +39,7 @@ const commands = [
                 duration: '00:00',
                 name: videoName,
             });
+            console.log(MusicGuild_1.default.isPlaying);
             if (!MusicGuild_1.default.isPlaying) {
                 MusicGuild_1.default.isPlaying = true;
                 connection = yield (channel === null || channel === void 0 ? void 0 : channel.join().catch(error => console.error(error)));
@@ -47,20 +48,6 @@ const commands = [
                     return;
                 }
                 musicGuild.play(connection, msg);
-                // let dispatcher: Discord.StreamDispatcher = connection.play(ytdl(link), {highWaterMark: 1024 * 1024 * 10});
-                // dispatcher.on('start', () => {
-                //     msg.channel.send(`--- Now playing ${videoName} ---`);
-                // });
-                // dispatcher.on('finish', () => {
-                //     msg.channel.send(`--- End playing of ${videoName} ---`);
-                //     const song: Song | undefined = musicGuild.nextSong();
-                //     if(song == undefined){
-                //         //leave
-                //         msg.channel.send(`--- No more songs !! ---`);
-                //         return;
-                //     }
-                //     // connection.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
-                // });
             }
         }),
     },

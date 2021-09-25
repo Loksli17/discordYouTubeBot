@@ -25,6 +25,7 @@ class MusicGuild {
     }
     play(connection, msg) {
         const song = this.queue[MusicGuild.currentIndex], dispatcher = connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
+        console.log(song, 'azazazaa');
         dispatcher.on('start', () => {
             msg.channel.send(`--- Now playing ${song.name} ---`);
         });
@@ -35,10 +36,10 @@ class MusicGuild {
                 //leave
                 msg.channel.send(`--- No more songs !! ---`);
                 MusicGuild.isPlaying = false;
+                MusicGuild.currentIndex++; //! it can be ERORR ATTENTION
                 return;
             }
             this.play(connection, msg);
-            // connection.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
         });
     }
 }
