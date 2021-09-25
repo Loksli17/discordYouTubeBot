@@ -2,6 +2,7 @@ import config   from './config';
 import Discord  from 'discord.js';
 import {google, youtube_v3} from 'googleapis';
 import ytdl from 'ytdl-core';
+import { GaxiosResponse } from 'gaxios';
 
 const youtube: youtube_v3.Youtube = google.youtube({
     auth   : 'AIzaSyCMJGB1MaBgoN78v8PkmuMEJOLs6_CYHME',
@@ -14,35 +15,40 @@ export interface Command{
     about: string;
 }
 
-
 const commands: Array<Command> = [
     {
         name : 'play',
         about: 'Command for play youtube video',
 
-        //! REFACTOR THIS BEFORE ANOTHER CODING !!!!!!
         out : async (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
-            let channel = msg.member!.voice.channel;
+            let
+                channel   : Discord.VoiceChannel | null = msg.member!.voice.channel,
+                link      : string                      = 'https://www.youtube.com/watch?v=',
+                videoName : string                      = '',
+                data      : GaxiosResponse | void,
+                connection: Discord.VoiceConnection | undefined | void;
 
-            youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }, (error: any, data: any) => {
-                console.log(error);
-                msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
+            data = await youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
 
-                console.log(data.data.items[0].snippet.title);
-                
-                channel?.join().then(async (connection: Discord.VoiceConnection) => {
-            
-                    const dispatcher = connection.play(ytdl(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`, {
-                        highWaterMark: 1024 * 1024 * 10
-                    }))
-                    .on('start', () => {
-                        msg.channel.send(`--- Now playing ${data.data.items[0].snippet.title} ---`);
-                    })
-                    .on('finish', () => {
-                        msg.channel.send(`--- End playing of ${data.data.items[0].snippet.title} ---`);
-                    });
-                })
+            if(data == undefined) { msg.reply('Error with Google API'); return;}
+
+            link += data.data.items[0].id.videoId;
+            videoName = data.data.items[0].snippet.title;
+            msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
+
+            connection = await channel?.join().catch(error => console.error(error));
+
+            if(connection == undefined){ msg.reply('Error with connection'); return; }
+
+            const dispatcher: Discord.StreamDispatcher = connection.play(ytdl(link), {highWaterMark: 1024 * 1024 * 10});
+
+            dispatcher.on('start', () => {
+                msg.channel.send(`--- Now playing ${videoName} ---`);
+            });
+
+            dispatcher.on('finish', () => {
+                msg.channel.send(`--- End playing of ${videoName} ---`);
             });
         }, 
     },

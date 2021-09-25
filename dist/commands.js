@@ -21,34 +21,55 @@ const youtube = googleapis_1.google.youtube({
 const commands = [
     {
         name: 'play',
-        //! REFACTOR THIS BEFORE ANOTHER CODING !!!!!!
+        about: 'Command for play youtube video',
         out: (bot, msg, words) => __awaiter(void 0, void 0, void 0, function* () {
-            let channel = msg.member.voice.channel;
-            youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }, (error, data) => {
-                console.log(error);
-                msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
-                console.log(data.data.items[0].snippet.title);
-                channel === null || channel === void 0 ? void 0 : channel.join().then((connection) => __awaiter(void 0, void 0, void 0, function* () {
-                    const dispatcher = connection.play(ytdl_core_1.default(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`, {
-                        highWaterMark: 1024 * 1024 * 10
-                    }))
-                        .on('start', () => {
-                        msg.channel.send(`--- Now playing ${data.data.items[0].snippet.title} ---`);
-                    })
-                        .on('finish', () => {
-                        msg.channel.send(`--- End playing of ${data.data.items[0].snippet.title} ---`);
-                    });
-                }));
+            let channel = msg.member.voice.channel, link = 'https://www.youtube.com/watch?v=', videoName = '', data, connection;
+            data = yield youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
+            if (data == undefined) {
+                msg.reply('Error with Google API');
+                return;
+            }
+            link += data.data.items[0].id.videoId;
+            videoName = data.data.items[0].snippet.title;
+            msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
+            connection = yield (channel === null || channel === void 0 ? void 0 : channel.join().catch(error => console.error(error)));
+            if (connection == undefined) {
+                msg.reply('Error with connection');
+                return;
+            }
+            const dispatcher = connection.play(ytdl_core_1.default(link), { highWaterMark: 1024 * 1024 * 10 });
+            dispatcher.on('start', () => {
+                msg.channel.send(`--- Now playing ${videoName} ---`);
+            });
+            dispatcher.on('finish', () => {
+                msg.channel.send(`--- End playing of ${videoName} ---`);
             });
         }),
-        about: 'Command for play youtube video',
+    },
+    {
+        name: 'pause',
+        about: 'Command for pause audio',
+        out: (bot, msg, words) => {
+        }
+    },
+    {
+        name: 'prev',
+        about: 'Command for pause audio',
+        out: (bot, msg, words) => {
+        }
+    },
+    {
+        name: 'next',
+        about: 'Command for pause audio',
+        out: (bot, msg, words) => {
+        }
     },
     {
         name: 'current',
+        about: 'Command for send current audio',
         out: (bot, msg, words) => {
             msg.channel.send('Now playing smth');
         },
-        about: 'Command for send current audio',
     },
     {
         name: 'queue',

@@ -1,13 +1,12 @@
 import config              from './config';
-import Discord, {Intents}  from 'discord.js'
+import Discord             from 'discord.js'
 import commands, {Command} from './commands';
 import configChipher       from './configChipher';
 
+
 const main = () => {
 
-    const 
-        intents: Array<number>  = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
-        bot    : Discord.Client = new Discord.Client();
+    const bot: Discord.Client = new Discord.Client();
 
     bot.on('ready', () => console.log('I am working!'));
 
@@ -15,13 +14,14 @@ const main = () => {
         
         if(msg.author.username == bot.user?.username || bot.user?.discriminator == msg.author.discriminator) return;
 
-        if(msg.content[0] != config.prefix) return;
-
-
         //! FIX THIS SHIT !!!
         let
+            reg            : RegExp        = new RegExp(`^${config.prefix}`, 'g'),
+            prefix         : string        = msg.content.match(reg)![0],
             words          : Array<string> = msg.content.split(" "),
             userCommandName: string        = words[0].substr(1, words[0].length);
+
+        if(prefix != config.prefix) return;
 
         words = words.filter((value, ind) => ind > 0);
         
