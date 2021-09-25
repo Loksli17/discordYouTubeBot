@@ -23,6 +23,8 @@ const commands: Array<Command> = [
         name : 'play',
         about: 'Command for play youtube video',
 
+
+        // ! don't forget about try catch
         out : async (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
             let
@@ -41,9 +43,9 @@ const commands: Array<Command> = [
             msg.channel.send(`https://www.youtube.com/watch?v=${data.data.items[0].id.videoId}`);
 
             musicGuild.addSong({
-                link: link,
+                link    : link,
                 duration: '00:00',
-                name: videoName,
+                name    : videoName,
             });
 
             if(!MusicGuild.isPlaying){
@@ -54,27 +56,6 @@ const commands: Array<Command> = [
                 if(connection == undefined){ msg.reply('Error with connection'); return; }
 
                 musicGuild.play(connection, msg);
-
-                // let dispatcher: Discord.StreamDispatcher = connection.play(ytdl(link), {highWaterMark: 1024 * 1024 * 10});
-
-                // dispatcher.on('start', () => {
-                //     msg.channel.send(`--- Now playing ${videoName} ---`);
-                // });
-
-                // dispatcher.on('finish', () => {
-                //     msg.channel.send(`--- End playing of ${videoName} ---`);
-
-                //     const song: Song | undefined = musicGuild.nextSong();
-                    
-                //     if(song == undefined){
-                //         //leave
-                //         msg.channel.send(`--- No more songs !! ---`);
-                //         return;
-                //     }
-
-                //     // connection.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
-                    
-                // });
             }
  
         }, 

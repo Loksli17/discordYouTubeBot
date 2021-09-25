@@ -23,6 +23,7 @@ const commands = [
     {
         name: 'play',
         about: 'Command for play youtube video',
+        // ! don't forget about try catch
         out: (bot, msg, words) => __awaiter(void 0, void 0, void 0, function* () {
             let channel = msg.member.voice.channel, link = 'https://www.youtube.com/watch?v=', videoName = '', data, connection;
             data = yield youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
