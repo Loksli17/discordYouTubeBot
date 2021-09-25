@@ -17,6 +17,8 @@ const main = () => {
 
         if(msg.content[0] != config.prefix) return;
 
+
+        //! FIX THIS SHIT !!!
         let
             words          : Array<string> = msg.content.split(" "),
             userCommandName: string        = words[0].substr(1, words[0].length);

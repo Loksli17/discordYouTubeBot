@@ -17,7 +17,8 @@ export interface Command{
 
 const commands: Array<Command> = [
     {
-        name: 'play',
+        name : 'play',
+        about: 'Command for play youtube video',
 
         //! REFACTOR THIS BEFORE ANOTHER CODING !!!!!!
         out : async (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
@@ -43,19 +44,39 @@ const commands: Array<Command> = [
                     });
                 })
             });
-        },
-
-        about: 'Command for play youtube video',
+        }, 
     },
 
     {
-        name: 'current',
+        name : 'pause',
+        about: 'Command for pause audio',
+        out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
+        }
+    },
+
+    {
+        name : 'prev',
+        about: 'Command for pause audio',
+        out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
+
+        }
+    },
+
+    {
+        name : 'next',
+        about: 'Command for pause audio',
+        out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
+
+        }
+    },
+
+    {
+        name : 'current',
+        about: 'Command for send current audio',
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
             msg.channel.send('Now playing smth');
         },
-
-        about: 'Command for send current audio',
     },
 
     {
