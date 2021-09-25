@@ -9,9 +9,7 @@ const main = () => {
         intents: Array<number>  = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES],
         bot    : Discord.Client = new Discord.Client({ intents: [intents] });
 
-    bot.on('ready', () => {
-        console.log('I am working!');
-    });
+    bot.on('ready', () => console.log('I am working!'));
 
     bot.on('messageCreate', (msg: Discord.Message) => {
         
@@ -19,9 +17,11 @@ const main = () => {
 
         if(msg.content[0] != config.prefix) return;
 
-        const 
+        let
             words          : Array<string> = msg.content.split(" "),
             userCommandName: string        = words[0].substr(1, words[0].length);
+
+        words = words.filter((value, ind) => ind > 0);
         
         commands.forEach((command: Command) => {
             if(command.name == userCommandName) command.out(bot, msg, words);

@@ -28,16 +28,15 @@ const commands_1 = __importDefault(require("./commands"));
 const configChipher_1 = __importDefault(require("./configChipher"));
 const main = () => {
     const intents = [discord_js_1.Intents.FLAGS.GUILDS, discord_js_1.Intents.FLAGS.GUILD_MESSAGES], bot = new discord_js_1.default.Client({ intents: [intents] });
-    bot.on('ready', () => {
-        console.log('I am working!');
-    });
+    bot.on('ready', () => console.log('I am working!'));
     bot.on('messageCreate', (msg) => {
         var _a, _b;
         if (msg.author.username == ((_a = bot.user) === null || _a === void 0 ? void 0 : _a.username) || ((_b = bot.user) === null || _b === void 0 ? void 0 : _b.discriminator) == msg.author.discriminator)
             return;
         if (msg.content[0] != config_1.default.prefix)
             return;
-        const words = msg.content.split(" "), userCommandName = words[0].substr(1, words[0].length);
+        let words = msg.content.split(" "), userCommandName = words[0].substr(1, words[0].length);
+        words = words.filter((value, ind) => ind > 0);
         commands_1.default.forEach((command) => {
             if (command.name == userCommandName)
                 command.out(bot, msg, words);
