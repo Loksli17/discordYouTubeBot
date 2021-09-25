@@ -49,7 +49,7 @@ export default class MusicGuild{
                 //leave
                 msg.channel.send(`--- No more songs !! ---`);
                 MusicGuild.isPlaying = false;
-                MusicGuild.currentIndex++;
+                MusicGuild.currentIndex++; //! it can be ERORR ATTENTION
                 return;
             }
 
