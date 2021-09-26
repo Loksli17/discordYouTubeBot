@@ -60,6 +60,7 @@ export default class MusicGuild{
             dispatcher.on('start', () => {
                 msg.channel.send(`--- Now playing ${song.name} ---`);
 
+                clearInterval(MusicGuild.interval);
                 MusicGuild.currentSeconds = 0;
                 MusicGuild.interval = setInterval(() => {
                     MusicGuild.currentSeconds++;
@@ -68,7 +69,7 @@ export default class MusicGuild{
 
             dispatcher.on('finish', () => {
                 msg.channel.send(`--- End playing of ${song.name} ---`);
-
+                
                 const nextSong: Song | undefined = this.nextSong();
                 
                 if(nextSong == undefined){

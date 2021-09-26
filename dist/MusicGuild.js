@@ -40,6 +40,7 @@ class MusicGuild {
             const dispatcher = MusicGuild.connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
             dispatcher.on('start', () => {
                 msg.channel.send(`--- Now playing ${song.name} ---`);
+                clearInterval(MusicGuild.interval);
                 MusicGuild.currentSeconds = 0;
                 MusicGuild.interval = setInterval(() => {
                     MusicGuild.currentSeconds++;

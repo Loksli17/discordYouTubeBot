@@ -27,7 +27,6 @@ const commands = [
     {
         name: 'play',
         about: 'Command for play youtube video',
-        // ! don't forget about try catch
         out: (bot, msg, words) => __awaiter(void 0, void 0, void 0, function* () {
             let channel = msg.member.voice.channel, link = 'https://www.youtube.com/watch?v=', videoName = '', data = undefined, connection;
             data = yield youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
@@ -54,7 +53,6 @@ const commands = [
                 name: videoName,
                 seconds: seconds,
             };
-            console.log(song);
             musicGuild.addSong(song);
             if (!MusicGuild_1.default.isPlaying) {
                 MusicGuild_1.default.isPlaying = true;
@@ -64,7 +62,7 @@ const commands = [
                     return;
                 }
                 MusicGuild_1.default.connection = connection;
-                // musicGuild.play(song, msg);
+                musicGuild.play(song, msg);
             }
         }),
     },
@@ -109,13 +107,12 @@ const commands = [
                 msg.reply('No more songs');
                 return;
             }
-            // console.log(MusicGuild.currentSeconds, song.seconds, (MusicGuild.currentSeconds / song.seconds) * 100);
-            const percent = Math.floor(Math.round((MusicGuild_1.default.currentSeconds / song.seconds) * 100) / 2);
+            const percent = Math.round((MusicGuild_1.default.currentSeconds / song.seconds) * 55);
             let percentStr = "";
             for (let i = 1; i <= percent; i++) {
                 percentStr += '#';
             }
-            for (let i = percent; i <= 50; i++) {
+            for (let i = percent; i <= 55; i++) {
                 percentStr += '=';
             }
             const embed = new discord_js_1.MessageEmbed();
@@ -147,7 +144,7 @@ const commands = [
         name: 'remove',
         about: 'Removing song from queue',
         out: (bot, msg, words) => {
-            const index = Number(words[0]);
+            const index = Number(words[1]);
             if (Number.isNaN(index)) {
                 const embed = new discord_js_1.MessageEmbed();
                 embed.setColor('#A84300');

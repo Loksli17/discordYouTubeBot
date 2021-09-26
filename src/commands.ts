@@ -112,7 +112,6 @@ const commands: Array<Command> = [
         }
     },
 
-    //! fix here FIRST
     {
         name : 'current',
         about: 'Command for send current audio',
@@ -120,11 +119,11 @@ const commands: Array<Command> = [
             let song: Song | undefined = musicGuild.currentSong();
             if(song == undefined) { msg.reply('No more songs'); return; }
 
-            const percent: number = Math.floor(Math.round((MusicGuild.currentSeconds / song.seconds) * 100) / 2);
+            const percent: number = Math.round((MusicGuild.currentSeconds / song.seconds) * 55);
             let percentStr: string = "";
 
             for(let i = 1; i <= percent; i++)   { percentStr += '#'}
-            for(let i = percent; i <= 50; i ++) { percentStr += '='}
+            for(let i = percent; i <= 55; i ++) { percentStr += '='}
 
             const embed: Discord.MessageEmbed = new MessageEmbed();
 
@@ -167,7 +166,7 @@ const commands: Array<Command> = [
         about: 'Removing song from queue',
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
-            const index: number = Number(words[0]);
+            const index: number = Number(words[1]);
 
             if(Number.isNaN(index)){
                 const embed: Discord.MessageEmbed = new MessageEmbed();
