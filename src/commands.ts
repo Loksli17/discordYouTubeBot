@@ -10,7 +10,7 @@ import { codeBlock } from '@discordjs/builders';
 
 
 const youtube: youtube_v3.Youtube = google.youtube({
-    auth   : 'AIzaSyAvuEigXw3eEJz2y2u-teWWNEEYoYunBz4',
+    auth   : 'AIzaSyCWi5et7aRYQej2l8VGFcTvWnUj1S6jsJk',
     version: 'v3'
 });
 
@@ -66,7 +66,7 @@ const commands: Array<Command> = [
                 if(connection == undefined) { msg.reply('Error with connection'); return; }
 
                 MusicGuild.connection = connection;
-                musicGuild.play(song, msg);
+                // musicGuild.play(song, msg);
             }
  
         }, 
@@ -80,6 +80,7 @@ const commands: Array<Command> = [
         }
     },
 
+    // ! fix this
     {
         name : 'prev',
         about: 'Command for pause audio',
@@ -90,6 +91,7 @@ const commands: Array<Command> = [
         }
     },
 
+    // ! fix this
     {
         name : 'next',
         about: 'Command for pause audio',
@@ -106,6 +108,8 @@ const commands: Array<Command> = [
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
             let song: Song | undefined = musicGuild.currentSong();
             if(song == undefined) { msg.reply('No more songs'); return; }
+
+
         },
     },
 
@@ -115,24 +119,33 @@ const commands: Array<Command> = [
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
             let
-                message: string      = '',
+                emded  : Discord.MessageEmbed = new MessageEmbed(),
                 songs  : Array<Song> = musicGuild.queue,
-                start  : number      = (MusicGuild.currentIndex - 5) > 0 ? MusicGuild.currentIndex - 5 : 0,
-                end    : number      = start + 10 > songs.length         ? songs.length                : start + 10;
+                start  : number      = (MusicGuild.currentIndex - 4) > 0 ? MusicGuild.currentIndex - 4    : 0,
+                end    : number      = MusicGuild.currentIndex + 5 > songs.length          ? songs.length : MusicGuild.currentIndex + 5;
 
-            console.log(start, end);
+            console.log(start, end, MusicGuild.currentIndex);
 
+            emded.setColor('#A84300');
+            emded.setTitle('Queue');
+            
             for(let i = start; i < end; i++){
                 if(i == MusicGuild.currentIndex){
-                    message = "```fix \n" + `${i}: ${songs[i].name} - ${songs[i].duration}\n` + "```\n"
+                    emded.addField(`\u200b`, `**-----> #${i + 1}**:` + "```css\n" + `[${songs[i].name}] - ${songs[i].duration}` + "\n```");
                 }else{
-                    message += `**${i}**: ${songs[i].name} - ${songs[i].duration}\n`;
+                    emded.addField(`\u200b`, `**#${i + 1}**: ${songs[i].name} - ${songs[i].duration}`);
                 }
             }
-
-            console.log(message);
             
-            msg.channel.send(codeBlock(message));
+            msg.channel.send(emded);
+        },
+    },
+
+    {
+        name : 'remove',
+        about: 'Removing song from queue',
+        out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
+
         },
     }
 ];

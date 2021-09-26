@@ -14,7 +14,6 @@ const main = () => {
         
         if(msg.author.username == bot.user?.username || bot.user?.discriminator == msg.author.discriminator) return;
 
-        //! FIX THIS SHIT !!!
         let
             reg            : RegExp                  = new RegExp(`^${config.prefix}`, 'g'),
             resultArr      : RegExpMatchArray | null = msg.content.match(reg),

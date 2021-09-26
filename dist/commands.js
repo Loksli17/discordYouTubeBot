@@ -12,13 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
+const discord_js_1 = require("discord.js");
 const googleapis_1 = require("googleapis");
 const MusicGuild_1 = __importDefault(require("./MusicGuild"));
-const builders_1 = require("@discordjs/builders");
 // @ts-ignore
 // import Youtube from 'simple-youtube-api';
 const youtube = googleapis_1.google.youtube({
-    auth: 'AIzaSyAvuEigXw3eEJz2y2u-teWWNEEYoYunBz4',
+    auth: 'AIzaSyCWi5et7aRYQej2l8VGFcTvWnUj1S6jsJk',
     version: 'v3'
 });
 const musicGuild = new MusicGuild_1.default();
@@ -52,7 +52,7 @@ const commands = [
                     return;
                 }
                 MusicGuild_1.default.connection = connection;
-                musicGuild.play(song, msg);
+                // musicGuild.play(song, msg);
             }
         }),
     },
@@ -62,6 +62,7 @@ const commands = [
         out: (bot, msg, words) => {
         }
     },
+    // ! fix this
     {
         name: 'prev',
         about: 'Command for pause audio',
@@ -74,6 +75,7 @@ const commands = [
             musicGuild.play(song, msg);
         }
     },
+    // ! fix this
     {
         name: 'next',
         about: 'Command for pause audio',
@@ -101,18 +103,19 @@ const commands = [
         name: 'queue',
         about: 'Command for send qeueu',
         out: (bot, msg, words) => {
-            let message = '', songs = musicGuild.queue, start = (MusicGuild_1.default.currentIndex - 5) > 0 ? MusicGuild_1.default.currentIndex - 5 : 0, end = start + 10 > songs.length ? songs.length : start + 10;
-            console.log(start, end);
+            let emded = new discord_js_1.MessageEmbed(), songs = musicGuild.queue, start = (MusicGuild_1.default.currentIndex - 4) > 0 ? MusicGuild_1.default.currentIndex - 5 : 0, end = MusicGuild_1.default.currentIndex + 5 > songs.length ? songs.length : MusicGuild_1.default.currentIndex + 5;
+            console.log(start, end, MusicGuild_1.default.currentIndex);
+            emded.setColor('#A84300');
+            emded.setTitle('Queue');
             for (let i = start; i < end; i++) {
                 if (i == MusicGuild_1.default.currentIndex) {
-                    message = "```fix \n" + `${i}: ${songs[i].name} - ${songs[i].duration}\n` + "```\n";
+                    emded.addField(`\u200b`, `**-----> #${i + 1}**:` + "```css\n" + `[${songs[i].name}] - ${songs[i].duration}` + "\n```");
                 }
                 else {
-                    message += `**${i}**: ${songs[i].name} - ${songs[i].duration}\n`;
+                    emded.addField(`\u200b`, `**#${i + 1}**: ${songs[i].name} - ${songs[i].duration}`);
                 }
             }
-            console.log(message);
-            msg.channel.send(builders_1.codeBlock(message));
+            msg.channel.send(emded);
         },
     }
 ];
