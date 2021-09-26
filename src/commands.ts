@@ -120,25 +120,25 @@ const commands: Array<Command> = [
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
             let
-                emded  : Discord.MessageEmbed = new MessageEmbed(),
+                embed  : Discord.MessageEmbed = new MessageEmbed(),
                 songs  : Array<Song> = musicGuild.queue,
                 start  : number      = (MusicGuild.currentIndex - 4) > 0 ? MusicGuild.currentIndex - 4    : 0,
                 end    : number      = MusicGuild.currentIndex + 5 > songs.length          ? songs.length : MusicGuild.currentIndex + 5;
 
             console.log(start, end, MusicGuild.currentIndex);
 
-            emded.setColor('#A84300');
-            emded.setTitle('Queue');
+            embed.setColor('#A84300');
+            embed.setTitle('Queue');
             
             for(let i = start; i < end; i++){
                 if(i == MusicGuild.currentIndex){
-                    emded.addField(`\u200b`, `**-----> #${i + 1}**:` + "```css\n" + `[${songs[i].name}] - ${songs[i].duration}` + "\n```");
+                    embed.addField(`\u200b`, `**-----> #${i + 1}**:` + "```css\n" + `[${songs[i].name}] - ${songs[i].duration}` + "\n```");
                 }else{
-                    emded.addField(`\u200b`, `**#${i + 1}**: ${songs[i].name} - ${songs[i].duration}`);
+                    embed.addField(`\u200b`, `**#${i + 1}**: ${songs[i].name} - ${songs[i].duration}`);
                 }
             }
             
-            msg.channel.send(emded);
+            msg.channel.send(embed);
         },
     },
 
@@ -147,6 +147,24 @@ const commands: Array<Command> = [
         about: 'Removing song from queue',
         out: (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
+            const index: number = Number(words[0]);
+
+            if(Number.isNaN(index)){
+                const embed: Discord.MessageEmbed = new MessageEmbed();
+                embed.setColor('#A84300');
+                embed.setTitle("Unexpected index of song's queue");
+                embed.setDescription(`Index must be from **1** to **${musicGuild.queue.length}**`);
+                msg.channel.send(embed);
+                return;
+            }
+
+            musicGuild.queue = musicGuild.queue.filter((song: Song, songInd: number) => songInd != index - 1);
+
+            const embed: Discord.MessageEmbed = new MessageEmbed();
+            embed.setColor('#A84300');
+            embed.setTitle("Successful removing");
+            embed.setDescription(`Song: **${musicGuild.queue[index - 1].name}** was removed`);
+            msg.channel.send(embed);
         },
     }
 ];

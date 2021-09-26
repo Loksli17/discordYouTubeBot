@@ -30,6 +30,9 @@ class MusicGuild {
     get queue() {
         return this.queue_;
     }
+    set queue(newVal) {
+        this.queue_ = newVal;
+    }
     play(song, msg) {
         if (MusicGuild.connection == undefined)
             return;

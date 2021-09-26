@@ -40,6 +40,10 @@ export default class MusicGuild{
         return this.queue_;
     }
 
+    public set queue(newVal: Array<Song>){
+        this.queue_ = newVal;
+    }
+
 
     public play(song: Song, msg: Discord.Message): void{
 

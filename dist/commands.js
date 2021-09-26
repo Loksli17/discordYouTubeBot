@@ -15,10 +15,11 @@ Object.defineProperty(exports, "__esModule", { value: true });
 const discord_js_1 = require("discord.js");
 const googleapis_1 = require("googleapis");
 const MusicGuild_1 = __importDefault(require("./MusicGuild"));
+const configChipher_1 = __importDefault(require("./configChipher"));
 // @ts-ignore
 // import Youtube from 'simple-youtube-api';
 const youtube = googleapis_1.google.youtube({
-    auth: 'AIzaSyCWi5et7aRYQej2l8VGFcTvWnUj1S6jsJk',
+    auth: configChipher_1.default.youtubeKey,
     version: 'v3'
 });
 const musicGuild = new MusicGuild_1.default();
@@ -103,19 +104,39 @@ const commands = [
         name: 'queue',
         about: 'Command for send qeueu',
         out: (bot, msg, words) => {
-            let emded = new discord_js_1.MessageEmbed(), songs = musicGuild.queue, start = (MusicGuild_1.default.currentIndex - 4) > 0 ? MusicGuild_1.default.currentIndex - 5 : 0, end = MusicGuild_1.default.currentIndex + 5 > songs.length ? songs.length : MusicGuild_1.default.currentIndex + 5;
+            let embed = new discord_js_1.MessageEmbed(), songs = musicGuild.queue, start = (MusicGuild_1.default.currentIndex - 4) > 0 ? MusicGuild_1.default.currentIndex - 4 : 0, end = MusicGuild_1.default.currentIndex + 5 > songs.length ? songs.length : MusicGuild_1.default.currentIndex + 5;
             console.log(start, end, MusicGuild_1.default.currentIndex);
-            emded.setColor('#A84300');
-            emded.setTitle('Queue');
+            embed.setColor('#A84300');
+            embed.setTitle('Queue');
             for (let i = start; i < end; i++) {
                 if (i == MusicGuild_1.default.currentIndex) {
-                    emded.addField(`\u200b`, `**-----> #${i + 1}**:` + "```css\n" + `[${songs[i].name}] - ${songs[i].duration}` + "\n```");
+                    embed.addField(`\u200b`, `**-----> #${i + 1}**:` + "```css\n" + `[${songs[i].name}] - ${songs[i].duration}` + "\n```");
                 }
                 else {
-                    emded.addField(`\u200b`, `**#${i + 1}**: ${songs[i].name} - ${songs[i].duration}`);
+                    embed.addField(`\u200b`, `**#${i + 1}**: ${songs[i].name} - ${songs[i].duration}`);
                 }
             }
-            msg.channel.send(emded);
+            msg.channel.send(embed);
+        },
+    },
+    {
+        name: 'remove',
+        about: 'Removing song from queue',
+        out: (bot, msg, words) => {
+            const index = Number(words[0]);
+            if (Number.isNaN(index)) {
+                const embed = new discord_js_1.MessageEmbed();
+                embed.setColor('#A84300');
+                embed.setTitle("Unexpected index of song's queue");
+                embed.setDescription(`Index must be from **1** to **${musicGuild.queue.length}**`);
+                msg.channel.send(embed);
+                return;
+            }
+            musicGuild.queue = musicGuild.queue.filter((song, songInd) => songInd != index - 1);
+            const embed = new discord_js_1.MessageEmbed();
+            embed.setColor('#A84300');
+            embed.setTitle(`Song: ${musicGuild.queue[index - 1]} was removed`);
+            msg.channel.send(embed);
         },
     }
 ];
