@@ -30,8 +30,6 @@ const commands: Array<Command> = [
         name : 'play',
         about: 'Command for play youtube video',
 
-
-        // ! don't forget about try catch
         out : async (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
 
             let
@@ -67,8 +65,6 @@ const commands: Array<Command> = [
                 name    : videoName,
                 seconds : seconds,
             };
-            
-            console.log(song);
 
             musicGuild.addSong(song);
 
@@ -80,7 +76,7 @@ const commands: Array<Command> = [
                 if(connection == undefined) { msg.reply('Error with connection'); return; }
 
                 MusicGuild.connection = connection;
-                // musicGuild.play(song, msg);
+                musicGuild.play(song, msg);
             }
  
         }, 
