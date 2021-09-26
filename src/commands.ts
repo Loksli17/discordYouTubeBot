@@ -125,8 +125,6 @@ const commands: Array<Command> = [
                 start  : number      = (MusicGuild.currentIndex - 4) > 0 ? MusicGuild.currentIndex - 4    : 0,
                 end    : number      = MusicGuild.currentIndex + 5 > songs.length          ? songs.length : MusicGuild.currentIndex + 5;
 
-            console.log(start, end, MusicGuild.currentIndex);
-
             embed.setColor('#A84300');
             embed.setTitle('Queue');
             
@@ -158,13 +156,13 @@ const commands: Array<Command> = [
                 return;
             }
 
-            musicGuild.queue = musicGuild.queue.filter((song: Song, songInd: number) => songInd != index - 1);
-
             const embed: Discord.MessageEmbed = new MessageEmbed();
             embed.setColor('#A84300');
             embed.setTitle("Successful removing");
             embed.setDescription(`Song: **${musicGuild.queue[index - 1].name}** was removed`);
             msg.channel.send(embed);
+
+            musicGuild.queue = musicGuild.queue.filter((song: Song, songInd: number) => songInd != index - 1);
         },
     }
 ];

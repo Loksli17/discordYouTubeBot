@@ -15,15 +15,18 @@ export default class MusicGuild{
     public static currentIndex: number      = 0;
     public static connection  : Discord.VoiceConnection | undefined | void;
 
+    
     public addSong(song: Song): void{
         this.queue_.push(song);
     }
+
 
     public nextSong(): Song | undefined{
         if(MusicGuild.currentIndex + 1 == this.queue_.length) return undefined;
         MusicGuild.currentIndex++;
         return this.queue_[MusicGuild.currentIndex];
     }
+
 
     public prevSong(): Song | undefined{
         if(MusicGuild.currentIndex - 1 == -1) return undefined;
@@ -49,26 +52,31 @@ export default class MusicGuild{
 
         if(MusicGuild.connection == undefined) return;
         
-        const dispatcher: Discord.StreamDispatcher = MusicGuild.connection!.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
+        try {
+            const dispatcher: Discord.StreamDispatcher = MusicGuild.connection!.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
 
-        dispatcher.on('start', () => {
-            msg.channel.send(`--- Now playing ${song.name} ---`);
-        });
+            dispatcher.on('start', () => {
+                msg.channel.send(`--- Now playing ${song.name} ---`);
+            });
 
-        dispatcher.on('finish', () => {
-            msg.channel.send(`--- End playing of ${song.name} ---`);
+            dispatcher.on('finish', () => {
+                msg.channel.send(`--- End playing of ${song.name} ---`);
 
-            const nextSong: Song | undefined = this.nextSong();
-            
-            if(nextSong == undefined){
-                //leave
-                msg.channel.send(`--- No more songs !! ---`);
-                MusicGuild.isPlaying = false;
-                MusicGuild.currentIndex++; //! it can be ERORR ATTENTION
-                return;
-            }
+                const nextSong: Song | undefined = this.nextSong();
+                
+                if(nextSong == undefined){
+                    //leave
+                    msg.channel.send(`--- No more songs !! ---`);
+                    MusicGuild.isPlaying = false;
+                    MusicGuild.currentIndex++; //! it can be ERORR ATTENTION
+                    return;
+                }
 
-            this.play(nextSong, msg);    
-        });
+                this.play(nextSong, msg);    
+            });
+        } catch (error) {
+            console.error(error);
+        }
+        
     }
 }

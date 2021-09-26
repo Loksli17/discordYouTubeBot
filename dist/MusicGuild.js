@@ -36,22 +36,27 @@ class MusicGuild {
     play(song, msg) {
         if (MusicGuild.connection == undefined)
             return;
-        const dispatcher = MusicGuild.connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
-        dispatcher.on('start', () => {
-            msg.channel.send(`--- Now playing ${song.name} ---`);
-        });
-        dispatcher.on('finish', () => {
-            msg.channel.send(`--- End playing of ${song.name} ---`);
-            const nextSong = this.nextSong();
-            if (nextSong == undefined) {
-                //leave
-                msg.channel.send(`--- No more songs !! ---`);
-                MusicGuild.isPlaying = false;
-                MusicGuild.currentIndex++; //! it can be ERORR ATTENTION
-                return;
-            }
-            this.play(nextSong, msg);
-        });
+        try {
+            const dispatcher = MusicGuild.connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
+            dispatcher.on('start', () => {
+                msg.channel.send(`--- Now playing ${song.name} ---`);
+            });
+            dispatcher.on('finish', () => {
+                msg.channel.send(`--- End playing of ${song.name} ---`);
+                const nextSong = this.nextSong();
+                if (nextSong == undefined) {
+                    //leave
+                    msg.channel.send(`--- No more songs !! ---`);
+                    MusicGuild.isPlaying = false;
+                    MusicGuild.currentIndex++; //! it can be ERORR ATTENTION
+                    return;
+                }
+                this.play(nextSong, msg);
+            });
+        }
+        catch (error) {
+            console.error(error);
+        }
     }
 }
 exports.default = MusicGuild;

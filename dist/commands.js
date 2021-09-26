@@ -105,7 +105,6 @@ const commands = [
         about: 'Command for send qeueu',
         out: (bot, msg, words) => {
             let embed = new discord_js_1.MessageEmbed(), songs = musicGuild.queue, start = (MusicGuild_1.default.currentIndex - 4) > 0 ? MusicGuild_1.default.currentIndex - 4 : 0, end = MusicGuild_1.default.currentIndex + 5 > songs.length ? songs.length : MusicGuild_1.default.currentIndex + 5;
-            console.log(start, end, MusicGuild_1.default.currentIndex);
             embed.setColor('#A84300');
             embed.setTitle('Queue');
             for (let i = start; i < end; i++) {
@@ -132,11 +131,12 @@ const commands = [
                 msg.channel.send(embed);
                 return;
             }
-            musicGuild.queue = musicGuild.queue.filter((song, songInd) => songInd != index - 1);
             const embed = new discord_js_1.MessageEmbed();
             embed.setColor('#A84300');
-            embed.setTitle(`Song: ${musicGuild.queue[index - 1]} was removed`);
+            embed.setTitle("Successful removing");
+            embed.setDescription(`Song: **${musicGuild.queue[index - 1].name}** was removed`);
             msg.channel.send(embed);
+            musicGuild.queue = musicGuild.queue.filter((song, songInd) => songInd != index - 1);
         },
     }
 ];
