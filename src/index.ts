@@ -17,11 +17,14 @@ const main = () => {
         let
             reg            : RegExp                  = new RegExp(`^${config.prefix}`, 'g'),
             resultArr      : RegExpMatchArray | null = msg.content.match(reg),
-            prefix         : string                  = resultArr == null ? "" : resultArr[0],
-            words          : Array<string>           = msg.content.split(" "),
-            userCommandName: string                  = words[0].substr(1, words[0].length);
+            prefix         : string                  = resultArr == null ? "" : resultArr[0];
 
         if(prefix != config.prefix) return;
+        msg.content.replace(prefix, '');
+
+        let
+            words          : Array<string> = msg.content.split(" "),
+            userCommandName: string        = words[1];
 
         words = words.filter((value, ind) => ind > 0);
         

@@ -5,6 +5,7 @@ export interface Song{
     link    : string;
     duration: string;
     name    : string;
+    seconds : number;
 }
 
 
@@ -81,7 +82,7 @@ export default class MusicGuild{
     }
 
     
-    public formatDuration(duration: string):string {
+    public formatDuration(duration: string): {duration: string; seconds: number} {
 
         let 
             min: string = '',
@@ -103,6 +104,9 @@ export default class MusicGuild{
         if(sec.length == 2) sec = "0" + sec;
         sec = sec.substr(0, 2);
         
-        return `${hou}:${min}:${sec}`;
+        return {
+            duration: `${hou}:${min}:${sec}`,
+            seconds : Number(hou) * 3600 + Number(min) * 60 + Number(sec) 
+        };
     }
 }

@@ -75,7 +75,10 @@ class MusicGuild {
         if (sec.length == 2)
             sec = "0" + sec;
         sec = sec.substr(0, 2);
-        return `${hou}:${min}:${sec}`;
+        return {
+            duration: `${hou}:${min}:${sec}`,
+            seconds: Number(hou) * 3600 + Number(min) * 60 + Number(sec)
+        };
     }
 }
 exports.default = MusicGuild;

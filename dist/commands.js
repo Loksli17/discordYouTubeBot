@@ -29,7 +29,7 @@ const commands = [
         about: 'Command for play youtube video',
         // ! don't forget about try catch
         out: (bot, msg, words) => __awaiter(void 0, void 0, void 0, function* () {
-            let channel = msg.member.voice.channel, link = 'https://www.youtube.com/watch?v=', videoName = '', duration = '', data = undefined, connection;
+            let channel = msg.member.voice.channel, link = 'https://www.youtube.com/watch?v=', videoName = '', data = undefined, connection;
             data = yield youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
             if (data == undefined) {
                 msg.reply('Error with Google API');
@@ -47,12 +47,14 @@ const commands = [
                     data.data.items[0].id.videoId,
                 ]
             }).catch(error => console.error(error));
-            duration = musicGuild.formatDuration(durationData.data.items[0].contentDetails.duration);
+            let { duration, seconds } = musicGuild.formatDuration(durationData.data.items[0].contentDetails.duration);
             let song = {
                 link: link,
                 duration: duration,
                 name: videoName,
+                seconds: seconds,
             };
+            console.log(song);
             musicGuild.addSong(song);
             if (!MusicGuild_1.default.isPlaying) {
                 MusicGuild_1.default.isPlaying = true;

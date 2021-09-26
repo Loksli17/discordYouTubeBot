@@ -18,9 +18,9 @@ const youtube: youtube_v3.Youtube = google.youtube({
 const musicGuild = new MusicGuild();
 
 export interface Command{
-    name : string;
-    out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => void;
-    about: string;
+    name   : string;
+    out    : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => void;
+    about  : string;
 }
 
 
@@ -38,7 +38,6 @@ const commands: Array<Command> = [
                 channel   : Discord.VoiceChannel | null = msg.member!.voice.channel,
                 link      : string                      = 'https://www.youtube.com/watch?v=',
                 videoName : string                      = '',
-                duration  : string                      = '',
                 data      : GaxiosResponse | void       = undefined,
                 connection: Discord.VoiceConnection | undefined | void;
 
@@ -60,13 +59,16 @@ const commands: Array<Command> = [
                 ]
             }).catch(error => console.error(error));
 
-            duration = musicGuild.formatDuration(durationData.data.items[0].contentDetails.duration);
+            let {duration, seconds} = musicGuild.formatDuration(durationData.data.items[0].contentDetails.duration);
 
             let song: Song = {
                 link    : link,
                 duration: duration,
                 name    : videoName,
+                seconds : seconds,
             };
+            
+            console.log(song);
 
             musicGuild.addSong(song);
 
