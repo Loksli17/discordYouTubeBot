@@ -5,12 +5,13 @@ import ytdl from 'ytdl-core';
 import { GaxiosResponse } from 'gaxios';
 import MusicGuild, { Song } from './MusicGuild';
 import { codeBlock } from '@discordjs/builders';
+import configChipher from './configChipher';
 // @ts-ignore
 // import Youtube from 'simple-youtube-api';
 
 
 const youtube: youtube_v3.Youtube = google.youtube({
-    auth   : 'AIzaSyCWi5et7aRYQej2l8VGFcTvWnUj1S6jsJk',
+    auth   : configChipher.youtubeKey,
     version: 'v3'
 });
 
