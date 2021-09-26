@@ -20,7 +20,6 @@ const main = () => {
         msg.content.replace(prefix, '');
         let words = msg.content.split(" "), userCommandName = words[1];
         words = words.filter((value, ind) => ind > 0);
-        console.log(msg.content, words, userCommandName);
         commands_1.default.forEach((command) => {
             if (command.name == userCommandName)
                 command.out(bot, msg, words);

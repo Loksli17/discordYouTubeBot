@@ -11,12 +11,13 @@ export interface Song{
 
 export default class MusicGuild{
 
-    public static isPlaying   : boolean     = false;
-    private       queue_       : Array<Song> = [];
-    public static currentIndex: number      = 0;
-    public static connection  : Discord.VoiceConnection | undefined | void;
-
-
+    public static  isPlaying     : boolean     = false;
+    private        queue_        : Array<Song> = [];
+    public static  currentIndex  : number      = 0;
+    public static  currentSeconds: number = 0;
+    public static  connection    : Discord.VoiceConnection | undefined | void;
+    private static interval      : NodeJS.Timeout;
+ 
     public addSong(song: Song): void{
         this.queue_.push(song);
     }
@@ -58,6 +59,11 @@ export default class MusicGuild{
 
             dispatcher.on('start', () => {
                 msg.channel.send(`--- Now playing ${song.name} ---`);
+
+                MusicGuild.currentSeconds = 0;
+                MusicGuild.interval = setInterval(() => {
+                    MusicGuild.currentSeconds++;
+                }, 1000)
             });
 
             dispatcher.on('finish', () => {
@@ -109,4 +115,25 @@ export default class MusicGuild{
             seconds : Number(hou) * 3600 + Number(min) * 60 + Number(sec) 
         };
     }
+
+
+    public formatSeconds(curSec: number): string{
+
+        let 
+            min: number = Math.floor(curSec / 60),
+            h  : number = Math.floor(curSec / 3600),
+            sec: number = curSec - min * 60;
+
+        let
+            minStr: string = min.toString(),
+            hStr  : string = h.toString(),
+            secStr: string = sec.toString();
+
+        if(hStr.length == 1) hStr = "0" + hStr;
+        if(minStr.length == 1) minStr = "0" + minStr;
+        if(secStr.length == 1) secStr = "0" + secStr;
+
+        return `${hStr}:${minStr}:${secStr}`;
+    }
+
 }

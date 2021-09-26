@@ -40,6 +40,10 @@ class MusicGuild {
             const dispatcher = MusicGuild.connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
             dispatcher.on('start', () => {
                 msg.channel.send(`--- Now playing ${song.name} ---`);
+                MusicGuild.currentSeconds = 0;
+                MusicGuild.interval = setInterval(() => {
+                    MusicGuild.currentSeconds++;
+                }, 1000);
             });
             dispatcher.on('finish', () => {
                 msg.channel.send(`--- End playing of ${song.name} ---`);
@@ -80,7 +84,19 @@ class MusicGuild {
             seconds: Number(hou) * 3600 + Number(min) * 60 + Number(sec)
         };
     }
+    formatSeconds(curSec) {
+        let min = Math.floor(curSec / 60), h = Math.floor(curSec / 3600), sec = curSec - min * 60;
+        let minStr = min.toString(), hStr = h.toString(), secStr = sec.toString();
+        if (hStr.length == 1)
+            hStr = "0" + hStr;
+        if (minStr.length == 1)
+            minStr = "0" + minStr;
+        if (secStr.length == 1)
+            secStr = "0" + secStr;
+        return `${hStr}:${minStr}:${secStr}`;
+    }
 }
 exports.default = MusicGuild;
 MusicGuild.isPlaying = false;
 MusicGuild.currentIndex = 0;
+MusicGuild.currentSeconds = 0;

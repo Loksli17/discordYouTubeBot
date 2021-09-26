@@ -109,10 +109,19 @@ const commands = [
                 msg.reply('No more songs');
                 return;
             }
+            // console.log(MusicGuild.currentSeconds, song.seconds, (MusicGuild.currentSeconds / song.seconds) * 100);
+            const percent = Math.floor(Math.round((MusicGuild_1.default.currentSeconds / song.seconds) * 100) / 2);
+            let percentStr = "";
+            for (let i = 1; i <= percent; i++) {
+                percentStr += '#';
+            }
+            for (let i = percent; i <= 50; i++) {
+                percentStr += '=';
+            }
             const embed = new discord_js_1.MessageEmbed();
             embed.setColor('#A84300');
             embed.setTitle(`Current song`);
-            embed.addField(`#${MusicGuild_1.default.currentIndex + 1}: ${song.name}`, "########------------");
+            embed.addField(`#${MusicGuild_1.default.currentIndex + 1}: ${song.name}`, `${percentStr} [${musicGuild.formatSeconds(MusicGuild_1.default.currentSeconds)} / ${song.duration}]`);
             msg.channel.send(embed);
         },
     },
