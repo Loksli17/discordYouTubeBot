@@ -72,9 +72,9 @@ class MusicGuild {
         min = min.substr(0, 2);
         result = duration.match(/\d+S/g);
         sec = result != null ? result[0] : '00';
-        sec = sec.substr(0, 2);
         if (sec.length == 2)
             sec = "0" + sec;
+        sec = sec.substr(0, 2);
         return `${hou}:${min}:${sec}`;
     }
 }

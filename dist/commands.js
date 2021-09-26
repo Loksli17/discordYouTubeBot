@@ -48,7 +48,6 @@ const commands = [
                 ]
             }).catch(error => console.error(error));
             duration = musicGuild.formatDuration(durationData.data.items[0].contentDetails.duration);
-            console.log(duration);
             let song = {
                 link: link,
                 duration: duration,
