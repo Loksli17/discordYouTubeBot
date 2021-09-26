@@ -45,10 +45,10 @@ class MusicGuild {
                 msg.channel.send(`--- End playing of ${song.name} ---`);
                 const nextSong = this.nextSong();
                 if (nextSong == undefined) {
-                    //leave
+                    // !leave
                     msg.channel.send(`--- No more songs !! ---`);
                     MusicGuild.isPlaying = false;
-                    MusicGuild.currentIndex++; //! it can be ERORR ATTENTION
+                    MusicGuild.currentIndex++;
                     return;
                 }
                 this.play(nextSong, msg);
@@ -57,6 +57,25 @@ class MusicGuild {
         catch (error) {
             console.error(error);
         }
+    }
+    formatDuration(duration) {
+        let min = '', sec = '', hou = '';
+        let result = duration.match(/\d+H/g);
+        hou = result != null ? result[0] : '00';
+        if (hou.length == 2)
+            hou = "0" + hou;
+        hou = hou.substr(0, 2);
+        result = duration.match(/\d+M/g);
+        min = result != null ? result[0] : '00';
+        if (min.length == 2)
+            min = "0" + min;
+        min = min.substr(0, 2);
+        result = duration.match(/\d+S/g);
+        sec = result != null ? result[0] : '00';
+        sec = sec.substr(0, 2);
+        if (sec.length == 2)
+            sec = "0" + sec;
+        return `${hou}:${min}:${sec}`;
     }
 }
 exports.default = MusicGuild;

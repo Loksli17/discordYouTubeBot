@@ -38,6 +38,7 @@ const commands: Array<Command> = [
                 channel   : Discord.VoiceChannel | null = msg.member!.voice.channel,
                 link      : string                      = 'https://www.youtube.com/watch?v=',
                 videoName : string                      = '',
+                duration  : string                      = '',
                 data      : GaxiosResponse | void       = undefined,
                 connection: Discord.VoiceConnection | undefined | void;
 
@@ -46,14 +47,24 @@ const commands: Array<Command> = [
             if(data == undefined) { msg.reply('Error with Google API'); return }
 
             //! add checking here
-
             link += data.data.items[0].id.videoId;
             videoName = data.data.items[0].snippet.title;
             msg.channel.send(link);
 
+            const durationData: any = await youtube.videos.list({
+                "part": [
+                    "contentDetails"
+                ],
+                "id": [
+                    data.data.items[0].id.videoId,
+                ]
+            }).catch(error => console.error(error));
+
+            duration = musicGuild.formatDuration(durationData.data.items[0].contentDetails.duration);
+
             let song: Song = {
                 link    : link,
-                duration: '00:00',
+                duration: duration,
                 name    : videoName,
             };
 
