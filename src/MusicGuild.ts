@@ -63,7 +63,7 @@ export default class MusicGuild{
                 MusicGuild.currentSeconds = 0;
                 MusicGuild.interval = setInterval(() => {
                     MusicGuild.currentSeconds++;
-                }, 1000)
+                }, 1000);
             });
 
             dispatcher.on('finish', () => {

@@ -112,6 +112,7 @@ const commands: Array<Command> = [
         }
     },
 
+    //! fix here FIRST
     {
         name : 'current',
         about: 'Command for send current audio',
