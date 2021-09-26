@@ -98,6 +98,11 @@ const commands = [
                 msg.reply('No more songs');
                 return;
             }
+            const embed = new discord_js_1.MessageEmbed();
+            embed.setColor('#A84300');
+            embed.setTitle(`Current song`);
+            embed.addField(`#${MusicGuild_1.default.currentIndex + 1}: ${song.name}`, "########------------");
+            msg.channel.send(embed);
         },
     },
     {

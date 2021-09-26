@@ -110,7 +110,13 @@ const commands: Array<Command> = [
             let song: Song | undefined = musicGuild.currentSong();
             if(song == undefined) { msg.reply('No more songs'); return; }
 
+            const embed: Discord.MessageEmbed = new MessageEmbed();
 
+            embed.setColor('#A84300');
+            embed.setTitle(`Current song`);
+            embed.addField(`#${MusicGuild.currentIndex + 1}: ${song.name}`, "########------------");
+
+            msg.channel.send(embed);
         },
     },
 
