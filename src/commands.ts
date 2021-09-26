@@ -119,11 +119,11 @@ const commands: Array<Command> = [
             let song: Song | undefined = musicGuild.currentSong();
             if(song == undefined) { msg.reply('No more songs'); return; }
 
-            const percent: number = Math.round((MusicGuild.currentSeconds / song.seconds) * 55);
+            const percent: number = Math.round((MusicGuild.currentSeconds / song.seconds) * 50);
             let percentStr: string = "";
 
             for(let i = 1; i <= percent; i++)   { percentStr += '#'}
-            for(let i = percent; i <= 55; i ++) { percentStr += '='}
+            for(let i = percent; i <= 50; i ++) { percentStr += '='}
 
             const embed: Discord.MessageEmbed = new MessageEmbed();
 
