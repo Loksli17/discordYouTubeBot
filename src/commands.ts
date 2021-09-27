@@ -1,13 +1,8 @@
-import config   from './config';
 import Discord, { MessageEmbed }  from 'discord.js';
-import {google, youtube_v3} from 'googleapis';
-import ytdl from 'ytdl-core';
-import { GaxiosResponse } from 'gaxios';
-import MusicGuild, { Song } from './MusicGuild';
-import { codeBlock } from '@discordjs/builders';
-import configChipher from './configChipher';
-// @ts-ignore
-// import Youtube from 'simple-youtube-api';
+import {google, youtube_v3}       from 'googleapis';
+import { GaxiosResponse }         from 'gaxios';
+import MusicGuild, { Song }       from './MusicGuild';
+import configChipher              from './configChipher';
 
 
 const youtube: youtube_v3.Youtube = google.youtube({
@@ -43,7 +38,6 @@ const commands: Array<Command> = [
 
             if(data == undefined) { msg.reply('Error with Google API'); return }
 
-            //! add checking here
             link += data.data.items[0].id.videoId;
             videoName = data.data.items[0].snippet.title;
             msg.channel.send(link);

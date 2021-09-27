@@ -1,5 +1,5 @@
 import Discord, { MessageEmbed } from 'discord.js';
-import ytdl    from 'ytdl-core';
+import ytdl                      from 'ytdl-core';
 
 export interface Song{
     link     : string;
@@ -39,7 +39,6 @@ export default class MusicGuild{
     }
 
 
-    //! here bad way
     public currentSong(): Song | undefined{
         return this.queue_[MusicGuild.currentIndex];
     }

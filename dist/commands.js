@@ -16,8 +16,6 @@ const discord_js_1 = require("discord.js");
 const googleapis_1 = require("googleapis");
 const MusicGuild_1 = __importDefault(require("./MusicGuild"));
 const configChipher_1 = __importDefault(require("./configChipher"));
-// @ts-ignore
-// import Youtube from 'simple-youtube-api';
 const youtube = googleapis_1.google.youtube({
     auth: configChipher_1.default.youtubeKey,
     version: 'v3'
@@ -34,7 +32,6 @@ const commands = [
                 msg.reply('Error with Google API');
                 return;
             }
-            //! add checking here
             link += data.data.items[0].id.videoId;
             videoName = data.data.items[0].snippet.title;
             msg.channel.send(link);
@@ -93,7 +90,6 @@ const commands = [
             musicGuild.play(song, msg);
         }
     },
-    // ! fix this
     {
         name: 'next',
         about: 'Command for pause audio',

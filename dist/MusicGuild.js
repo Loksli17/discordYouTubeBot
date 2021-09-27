@@ -25,7 +25,6 @@ class MusicGuild {
         MusicGuild.currentIndex--;
         return this.queue_[MusicGuild.currentIndex];
     }
-    //! here bad way
     currentSong() {
         return this.queue_[MusicGuild.currentIndex];
     }
