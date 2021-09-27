@@ -108,7 +108,7 @@ const commands: Array<Command> = [
             musicGuild.play(song, msg);
         }
     },
-
+ 
     {
         name : 'next',
         about: 'Command for pause audio',
