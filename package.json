@@ -9,7 +9,6 @@
   "author": "loksli17",
   "license": "ISC",
   "dependencies": {
-    "@discordjs/builders": "^0.6.0",
     "@discordjs/opus": "^0.5.3",
     "@types/crypto-js": "^4.0.2",
     "crypto-js": "^4.1.1",
@@ -17,7 +16,6 @@
     "ffmpeg-static": "^4.4.0",
     "google-auth-library": "^7.9.2",
     "googleapis": "^87.0.0",
-    "simple-youtube-api": "^5.2.1",
     "ytdl-core": "^4.9.1"
   }
 }
