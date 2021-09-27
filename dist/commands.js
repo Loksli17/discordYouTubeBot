@@ -40,7 +40,7 @@ const commands = [
             msg.channel.send(link);
             const durationData = yield youtube.videos.list({
                 "part": [
-                    "contentDetails"
+                    "contentDetails, snippet"
                 ],
                 "id": [
                     data.data.items[0].id.videoId,
@@ -52,10 +52,11 @@ const commands = [
                 duration: duration,
                 name: videoName,
                 seconds: seconds,
+                thumbnail: durationData.data.items[0].snippet.thumbnails.default.url
             };
             musicGuild.addSong(song);
-            if (!MusicGuild_1.default.isPlaying) {
-                MusicGuild_1.default.isPlaying = true;
+            if (!MusicGuild_1.default.hasMusic) {
+                MusicGuild_1.default.hasMusic = true;
                 connection = yield (channel === null || channel === void 0 ? void 0 : channel.join().catch(error => console.error(error)));
                 if (connection == undefined) {
                     msg.reply('Error with connection');
@@ -70,6 +71,14 @@ const commands = [
         name: 'pause',
         about: 'Command for pause audio',
         out: (bot, msg, words) => {
+            musicGuild.pause(msg);
+        }
+    },
+    {
+        name: 'resume',
+        about: 'Command for continue audio',
+        out: (bot, msg, words) => {
+            musicGuild.resume(msg);
         }
     },
     // ! fix this
@@ -93,6 +102,7 @@ const commands = [
             let song = musicGuild.nextSong();
             if (song == undefined) {
                 msg.reply('No more songs');
+                musicGuild.stop(msg);
                 return;
             }
             musicGuild.play(song, msg);
@@ -107,18 +117,19 @@ const commands = [
                 msg.reply('No more songs');
                 return;
             }
-            const percent = Math.round((MusicGuild_1.default.currentSeconds / song.seconds) * 55);
+            const percent = Math.round((MusicGuild_1.default.currentSeconds / song.seconds) * 40);
             let percentStr = "";
             for (let i = 1; i <= percent; i++) {
                 percentStr += '#';
             }
-            for (let i = percent; i <= 55; i++) {
+            for (let i = percent; i <= 40; i++) {
                 percentStr += '=';
             }
             const embed = new discord_js_1.MessageEmbed();
             embed.setColor('#A84300');
             embed.setTitle(`Current song`);
             embed.addField(`#${MusicGuild_1.default.currentIndex + 1}: ${song.name}`, `${percentStr} [${musicGuild.formatSeconds(MusicGuild_1.default.currentSeconds)} / ${song.duration}]`);
+            embed.setThumbnail(song.thumbnail);
             msg.channel.send(embed);
         },
     },

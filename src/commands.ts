@@ -50,7 +50,7 @@ const commands: Array<Command> = [
 
             const durationData: any = await youtube.videos.list({
                 "part": [
-                    "contentDetails"
+                    "contentDetails, snippet"
                 ],
                 "id": [
                     data.data.items[0].id.videoId,
@@ -60,17 +60,18 @@ const commands: Array<Command> = [
             let {duration, seconds} = musicGuild.formatDuration(durationData.data.items[0].contentDetails.duration);
 
             let song: Song = {
-                link    : link,
-                duration: duration,
-                name    : videoName,
-                seconds : seconds,
+                link     : link,
+                duration : duration,
+                name     : videoName,
+                seconds  : seconds,
+                thumbnail: durationData.data.items[0].snippet.thumbnails.default.url
             };
 
             musicGuild.addSong(song);
 
-            if(!MusicGuild.isPlaying){
+            if(!MusicGuild.hasMusic){
 
-                MusicGuild.isPlaying = true;
+                MusicGuild.hasMusic = true;
                 connection = await channel?.join().catch(error => console.error(error));
 
                 if(connection == undefined) { msg.reply('Error with connection'); return; }
@@ -86,11 +87,18 @@ const commands: Array<Command> = [
         name : 'pause',
         about: 'Command for pause audio',
         out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
-
+            musicGuild.pause(msg);
         }
     },
 
-    // ! fix this
+    {
+        name : 'resume',
+        about: 'Command for continue audio',
+        out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
+            musicGuild.resume(msg);
+        }
+    },
+
     {
         name : 'prev',
         about: 'Command for pause audio',
@@ -107,7 +115,11 @@ const commands: Array<Command> = [
         about: 'Command for pause audio',
         out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
             let song: Song | undefined = musicGuild.nextSong();
-            if(song == undefined) { msg.reply('No more songs'); return; }
+            if(song == undefined) { 
+                msg.reply('No more songs');
+                musicGuild.stop(msg);
+                return; 
+            }
             musicGuild.play(song, msg);
         }
     },
@@ -119,17 +131,18 @@ const commands: Array<Command> = [
             let song: Song | undefined = musicGuild.currentSong();
             if(song == undefined) { msg.reply('No more songs'); return; }
 
-            const percent: number = Math.round((MusicGuild.currentSeconds / song.seconds) * 50);
+            const percent: number = Math.round((MusicGuild.currentSeconds / song.seconds) * 40);
             let percentStr: string = "";
 
             for(let i = 1; i <= percent; i++)   { percentStr += '#'}
-            for(let i = percent; i <= 50; i ++) { percentStr += '='}
+            for(let i = percent; i <= 40; i ++) { percentStr += '='}
 
             const embed: Discord.MessageEmbed = new MessageEmbed();
 
             embed.setColor('#A84300');
             embed.setTitle(`Current song`);
             embed.addField(`#${MusicGuild.currentIndex + 1}: ${song.name}`, `${percentStr} [${musicGuild.formatSeconds(MusicGuild.currentSeconds)} / ${song.duration}]`);
+            embed.setThumbnail(song.thumbnail);
 
             msg.channel.send(embed);
         },

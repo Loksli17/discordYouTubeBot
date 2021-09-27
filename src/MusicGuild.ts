@@ -1,17 +1,19 @@
-import Discord from 'discord.js';
+import Discord, { MessageEmbed } from 'discord.js';
 import ytdl    from 'ytdl-core';
 
 export interface Song{
-    link    : string;
-    duration: string;
-    name    : string;
-    seconds : number;
+    link     : string;
+    duration : string;
+    name     : string;
+    seconds  : number;
+    thumbnail: string;
 }
 
 
 export default class MusicGuild{
 
-    public static  isPlaying     : boolean     = false;
+    public static  hasMusic      : boolean     = false;
+    public         isPlaying     : boolean     = false;
     private        queue_        : Array<Song> = [];
     public static  currentIndex  : number      = 0;
     public static  currentSeconds: number = 0;
@@ -36,17 +38,89 @@ export default class MusicGuild{
         return this.queue_[MusicGuild.currentIndex];
     }
 
+
     //! here bad way
     public currentSong(): Song | undefined{
         return this.queue_[MusicGuild.currentIndex];
     }
 
+
     public get queue(): Array<Song>{
         return this.queue_;
     }
 
+
     public set queue(newVal: Array<Song>){
         this.queue_ = newVal;
+    }
+
+
+    public pause(msg: Discord.Message): void {
+
+        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return;}
+
+        const embed: Discord.MessageEmbed = new MessageEmbed();
+        embed.setColor('#A84300');
+      
+        if(!MusicGuild.hasMusic){
+            embed.setDescription("Livsi **doesn`t** have* music");
+            msg.channel.send(embed);
+            return;
+        }
+
+        if(!this.isPlaying){
+            embed.setDescription('Livsi **already** has been **paused**');
+            msg.channel.send(embed);
+            return;
+        }
+
+        this.isPlaying = false;
+        MusicGuild.connection.dispatcher.pause();
+
+        embed.setDescription('Livsi has been **paused**');
+        msg.channel.send(embed);
+    }
+
+
+    public resume(msg: Discord.Message): void {
+
+        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return;}
+
+        const embed: Discord.MessageEmbed = new MessageEmbed();
+        embed.setColor('#A84300');
+
+        if(!MusicGuild.hasMusic){
+            embed.setDescription("Livsi *doesn`t have* music");
+            msg.channel.send(embed);
+            return;
+        }
+
+        if(this.isPlaying && MusicGuild.hasMusic){
+            embed.setDescription('Livsi **already** has been **resumed**');
+            msg.channel.send(embed);
+            return;
+        }
+
+        this.isPlaying = true;
+        MusicGuild.connection.dispatcher.resume();
+
+        embed.setDescription('Livsi has been **resumed**');
+        msg.channel.send(embed);
+    }
+
+
+    public stop(msg: Discord.Message){
+
+        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return;}
+
+        const embed: Discord.MessageEmbed = new MessageEmbed();
+        embed.setColor('#A84300');
+
+        this.isPlaying = false;
+        MusicGuild.connection.dispatcher.end();
+
+        embed.setDescription('Livsi has been **stoped**');
+        msg.channel.send(embed);
     }
 
 
@@ -58,29 +132,46 @@ export default class MusicGuild{
             const dispatcher: Discord.StreamDispatcher = MusicGuild.connection!.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
 
             dispatcher.on('start', () => {
-                msg.channel.send(`--- Now playing ${song.name} ---`);
+                const embed: Discord.MessageEmbed = new MessageEmbed();
+
+                embed.setColor('#A84300');
+                embed.setDescription(`Song **${song.name}** was **started** with duration **${song.duration}**`);
+                msg.channel.send(embed);
 
                 clearInterval(MusicGuild.interval);
                 MusicGuild.currentSeconds = 0;
                 MusicGuild.interval = setInterval(() => {
                     MusicGuild.currentSeconds++;
                 }, 1000);
+
+                this.isPlaying = true;
             });
 
             dispatcher.on('finish', () => {
-                msg.channel.send(`--- End playing of ${song.name} ---`);
                 
-                const nextSong: Song | undefined = this.nextSong();
+                const
+                    embed   : Discord.MessageEmbed = new MessageEmbed(), 
+                    nextSong: Song | undefined     = this.nextSong();
+
+                embed.setColor('#A84300');
+                embed.setDescription(`Song **${song.name}** was **ended** with duration **${song.duration}**`);
+                msg.channel.send(embed);
                 
                 if(nextSong == undefined){
                     // !leave
-                    msg.channel.send(`--- No more songs !! ---`);
-                    MusicGuild.isPlaying = false;
+                    embed.setDescription(`I **don't have** song anymore`);
+                    msg.channel.send(embed);
+                    MusicGuild.hasMusic = false;
                     MusicGuild.currentIndex++;
+
+                    if(MusicGuild.connection != undefined) MusicGuild.connection.dispatcher.end();
+                    
                     return;
                 }
 
-                this.play(nextSong, msg);    
+                this.play(nextSong, msg);
+                
+                this.isPlaying = false;
             });
         } catch (error) {
             console.error(error);
