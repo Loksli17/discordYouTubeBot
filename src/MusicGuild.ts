@@ -25,7 +25,7 @@ export default class MusicGuild{
     }
 
 
-    public nextSong(): Song | undefined{
+    public nextSong(): Song | undefined {
         if(MusicGuild.currentIndex + 1 == this.queue_.length) return undefined;
         MusicGuild.currentIndex++;
         return this.queue_[MusicGuild.currentIndex];
@@ -57,7 +57,7 @@ export default class MusicGuild{
 
     public pause(msg: Discord.Message): void {
 
-        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return;}
+        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return; }
 
         const embed: Discord.MessageEmbed = new MessageEmbed();
         embed.setColor('#A84300');
@@ -84,7 +84,7 @@ export default class MusicGuild{
 
     public resume(msg: Discord.Message): void {
 
-        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return;}
+        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return; }
 
         const embed: Discord.MessageEmbed = new MessageEmbed();
         embed.setColor('#A84300');
@@ -105,21 +105,6 @@ export default class MusicGuild{
         MusicGuild.connection.dispatcher.resume();
 
         embed.setDescription('Livsi has been **resumed**');
-        msg.channel.send(embed);
-    }
-
-
-    public stop(msg: Discord.Message){
-
-        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return;}
-
-        const embed: Discord.MessageEmbed = new MessageEmbed();
-        embed.setColor('#A84300');
-
-        this.isPlaying = false;
-        MusicGuild.connection.dispatcher.end();
-
-        embed.setDescription('Livsi has been **stoped**');
         msg.channel.send(embed);
     }
 
@@ -158,14 +143,10 @@ export default class MusicGuild{
                 msg.channel.send(embed);
                 
                 if(nextSong == undefined){
-                    // !leave
                     embed.setDescription(`I **don't have** song anymore`);
                     msg.channel.send(embed);
                     MusicGuild.hasMusic = false;
                     MusicGuild.currentIndex++;
-
-                    if(MusicGuild.connection != undefined) MusicGuild.connection.dispatcher.end();
-                    
                     return;
                 }
 

@@ -79,18 +79,6 @@ class MusicGuild {
         embed.setDescription('Livsi has been **resumed**');
         msg.channel.send(embed);
     }
-    stop(msg) {
-        if (MusicGuild.connection == undefined) {
-            msg.reply('Error with connection');
-            return;
-        }
-        const embed = new discord_js_1.MessageEmbed();
-        embed.setColor('#A84300');
-        this.isPlaying = false;
-        MusicGuild.connection.dispatcher.end();
-        embed.setDescription('Livsi has been **stoped**');
-        msg.channel.send(embed);
-    }
     play(song, msg) {
         if (MusicGuild.connection == undefined)
             return;
@@ -114,13 +102,10 @@ class MusicGuild {
                 embed.setDescription(`Song **${song.name}** was **ended** with duration **${song.duration}**`);
                 msg.channel.send(embed);
                 if (nextSong == undefined) {
-                    // !leave
                     embed.setDescription(`I **don't have** song anymore`);
                     msg.channel.send(embed);
                     MusicGuild.hasMusic = false;
                     MusicGuild.currentIndex++;
-                    if (MusicGuild.connection != undefined)
-                        MusicGuild.connection.dispatcher.end();
                     return;
                 }
                 this.play(nextSong, msg);

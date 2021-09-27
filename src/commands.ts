@@ -116,8 +116,9 @@ const commands: Array<Command> = [
         out  : (bot: Discord.Client, msg: Discord.Message, words: Array<string>) => {
             let song: Song | undefined = musicGuild.nextSong();
             if(song == undefined) { 
+                MusicGuild.currentIndex++;
                 msg.reply('No more songs');
-                musicGuild.stop(msg);
+                musicGuild.pause(msg);
                 return; 
             }
             musicGuild.play(song, msg);

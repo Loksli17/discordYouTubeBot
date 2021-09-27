@@ -81,7 +81,6 @@ const commands = [
             musicGuild.resume(msg);
         }
     },
-    // ! fix this
     {
         name: 'prev',
         about: 'Command for pause audio',
@@ -101,8 +100,9 @@ const commands = [
         out: (bot, msg, words) => {
             let song = musicGuild.nextSong();
             if (song == undefined) {
+                MusicGuild_1.default.currentIndex++;
                 msg.reply('No more songs');
-                musicGuild.stop(msg);
+                musicGuild.pause(msg);
                 return;
             }
             musicGuild.play(song, msg);
