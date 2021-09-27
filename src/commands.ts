@@ -109,7 +109,6 @@ const commands: Array<Command> = [
         }
     },
 
-    // ! fix this
     {
         name : 'next',
         about: 'Command for pause audio',
