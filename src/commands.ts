@@ -2,7 +2,7 @@ import Discord, { MessageEmbed }  from 'discord.js';
 import {google, youtube_v3}       from 'googleapis';
 import { GaxiosResponse }         from 'gaxios';
 import MusicGuild, { Song }       from './MusicGuild';
-import configChipher              from './configChipher';
+import configChipher              from './config/configChipher';
 
 
 const youtube: youtube_v3.Youtube = google.youtube({
