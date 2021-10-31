@@ -1,4 +1,4 @@
-import ClientAdapter       from './ClientAdapter';
+import ClientAdapter from './ClientAdapter';
 
 
 class App{
@@ -18,6 +18,7 @@ class App{
         return this.instance || (this.instance = new this());
     }
 }
+
 
 
 let app: App = App.Instance;

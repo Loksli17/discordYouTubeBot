@@ -1,7 +1,7 @@
 import Discord, { MessageEmbed } from 'discord.js';
 import ytdl                      from 'ytdl-core';
 
-export interface Song{
+export interface Song {
     link     : string;
     duration : string;
     name     : string;
@@ -12,19 +12,19 @@ export interface Song{
 
 export default class MusicGuild{
 
-    public static  hasMusic      : boolean     = false;
+    public hasMusic              : boolean     = false;
     public         isPlaying     : boolean     = false;
     private        queue_        : Array<Song> = [];
     public static  currentIndex  : number      = 0;
     public static  currentSeconds: number = 0;
-    public static  connection    : Discord.VoiceConnection | undefined | void;
+    public         connection    : Discord.VoiceConnection | undefined | void;
     private static interval      : NodeJS.Timeout;
  
     public addSong(song: Song): void{
         this.queue_.push(song);
     }
 
-
+    
     public nextSong(): Song | undefined {
         if(MusicGuild.currentIndex + 1 == this.queue_.length) return undefined;
         MusicGuild.currentIndex++;
@@ -32,88 +32,88 @@ export default class MusicGuild{
     }
 
 
-    public prevSong(): Song | undefined{
-        if(MusicGuild.currentIndex - 1 == -1) return undefined;
-        MusicGuild.currentIndex--;
-        return this.queue_[MusicGuild.currentIndex];
-    }
+    // public prevSong(): Song | undefined{
+    //     if(MusicGuild.currentIndex - 1 == -1) return undefined;
+    //     MusicGuild.currentIndex--;
+    //     return this.queue_[MusicGuild.currentIndex];
+    // }
 
 
-    public currentSong(): Song | undefined{
-        return this.queue_[MusicGuild.currentIndex];
-    }
+    // public currentSong(): Song | undefined{
+    //     return this.queue_[MusicGuild.currentIndex];
+    // }
 
 
-    public get queue(): Array<Song>{
-        return this.queue_;
-    }
+    // public get queue(): Array<Song>{
+    //     return this.queue_;
+    // }
 
 
-    public set queue(newVal: Array<Song>){
-        this.queue_ = newVal;
-    }
+    // public set queue(newVal: Array<Song>){
+    //     this.queue_ = newVal;
+    // }
 
 
-    public pause(msg: Discord.Message): void {
+    // public pause(msg: Discord.Message): void {
 
-        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return; }
+    //     if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return; }
 
-        const embed: Discord.MessageEmbed = new MessageEmbed();
-        embed.setColor('#A84300');
+    //     const embed: Discord.MessageEmbed = new MessageEmbed();
+    //     embed.setColor('#A84300');
       
-        if(!MusicGuild.hasMusic){
-            embed.setDescription("Livsi **doesn`t** have* music");
-            msg.channel.send(embed);
-            return;
-        }
+    //     if(!this.hasMusic){
+    //         embed.setDescription("Livsi **doesn`t** have* music");
+    //         msg.channel.send(embed);
+    //         return;
+    //     }
 
-        if(!this.isPlaying){
-            embed.setDescription('Livsi **already** has been **paused**');
-            msg.channel.send(embed);
-            return;
-        }
+    //     if(!this.isPlaying){
+    //         embed.setDescription('Livsi **already** has been **paused**');
+    //         msg.channel.send(embed);
+    //         return;
+    //     }
 
-        this.isPlaying = false;
-        MusicGuild.connection.dispatcher.pause();
+    //     this.isPlaying = false;
+    //     MusicGuild.connection.dispatcher.pause();
 
-        embed.setDescription('Livsi has been **paused**');
-        msg.channel.send(embed);
-    }
+    //     embed.setDescription('Livsi has been **paused**');
+    //     msg.channel.send(embed);
+    // }
 
 
-    public resume(msg: Discord.Message): void {
+    // public resume(msg: Discord.Message): void {
 
-        if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return; }
+    //     if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return; }
 
-        const embed: Discord.MessageEmbed = new MessageEmbed();
-        embed.setColor('#A84300');
+    //     const embed: Discord.MessageEmbed = new MessageEmbed();
+    //     embed.setColor('#A84300');
 
-        if(!MusicGuild.hasMusic){
-            embed.setDescription("Livsi *doesn`t have* music");
-            msg.channel.send(embed);
-            return;
-        }
+    //     if(!MusicGuild.hasMusic){
+    //         embed.setDescription("Livsi *doesn`t have* music");
+    //         msg.channel.send(embed);
+    //         return;
+    //     }
 
-        if(this.isPlaying && MusicGuild.hasMusic){
-            embed.setDescription('Livsi **already** has been **resumed**');
-            msg.channel.send(embed);
-            return;
-        }
+    //     if(this.isPlaying && MusicGuild.hasMusic){
+    //         embed.setDescription('Livsi **already** has been **resumed**');
+    //         msg.channel.send(embed);
+    //         return;
+    //     }
 
-        this.isPlaying = true;
-        MusicGuild.connection.dispatcher.resume();
+    //     this.isPlaying = true;
+    //     MusicGuild.connection.dispatcher.resume();
 
-        embed.setDescription('Livsi has been **resumed**');
-        msg.channel.send(embed);
-    }
+    //     embed.setDescription('Livsi has been **resumed**');
+    //     msg.channel.send(embed);
+    // }
 
 
     public play(song: Song, msg: Discord.Message): void{
 
-        if(MusicGuild.connection == undefined) return;
+        if(this.connection == undefined) return;
         
         try {
-            const dispatcher: Discord.StreamDispatcher = MusicGuild.connection!.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
+            const dispatcher: Discord.StreamDispatcher = this.connection!.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
 
             dispatcher.on('start', () => {
                 const embed: Discord.MessageEmbed = new MessageEmbed();
@@ -144,7 +144,7 @@ export default class MusicGuild{
                 if(nextSong == undefined){
                     embed.setDescription(`I **don't have** song anymore`);
                     msg.channel.send(embed);
-                    MusicGuild.hasMusic = false;
+                    this.hasMusic = false;
                     MusicGuild.currentIndex++;
                     return;
                 }

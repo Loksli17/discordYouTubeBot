@@ -1,13 +1,12 @@
-import Discord, { Client }   from 'discord.js'
+import Discord, { BitField, Client }   from 'discord.js'
 import config                from './config';
 import configChipher         from './config/configChipher';
-import commands, { Command } from './commands';
+import Bot                   from './Bot/Bot';
 
 
 export default class ClientAdapter {
 
     private client: Client = new Discord.Client();
-    private key   : string = ""
 
     constructor() { }
 
@@ -23,31 +22,29 @@ export default class ClientAdapter {
     }
 
     public message(): void {
-        this.client.on('message', (msg: Discord.Message) => {
+        this.client.on('message', async (msg: Discord.Message) => {
 
             if(msg.author.username == this.client.user?.username || this.client.user?.discriminator == msg.author.discriminator) {
+                console.error('error with user');
                 // todo send error message !
                 return;
             }
 
-            let
-                reg      : RegExp                  = new RegExp(`^${config.prefix}`, 'g'),
-                resultArr: RegExpMatchArray | null = msg.content.match(reg),
-                prefix   : string                  = resultArr == null ? "" : resultArr[0];
+            const bot: Bot = new Bot(msg);
 
-            if(prefix != config.prefix) return;
-            msg.content.replace(prefix, '');
+            const checkPrefixResult: boolean = bot.checkPrefix();
 
-            let
-                words          : Array<string> = msg.content.split(" "),
-                userCommandName: string        = words[1];
+            if(!checkPrefixResult){
+                console.error('error this prefix');
+                //todo send error message
+            }
 
-            words = words.filter((value, ind) => ind > 0); //* removing command
-            
-            commands.forEach((command: Command) => {
-                if(command.name == userCommandName) command.out(this.client, msg, words);
-            });
-
+            try {
+                await bot.execute();
+            } catch (error) {
+                //todo send error message
+                console.error(error);
+            }
         });
     }
 

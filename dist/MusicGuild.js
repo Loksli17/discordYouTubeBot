@@ -7,6 +7,7 @@ const discord_js_1 = require("discord.js");
 const ytdl_core_1 = __importDefault(require("ytdl-core"));
 class MusicGuild {
     constructor() {
+        this.hasMusic = false;
         this.isPlaying = false;
         this.queue_ = [];
     }
@@ -19,70 +20,63 @@ class MusicGuild {
         MusicGuild.currentIndex++;
         return this.queue_[MusicGuild.currentIndex];
     }
-    prevSong() {
-        if (MusicGuild.currentIndex - 1 == -1)
-            return undefined;
-        MusicGuild.currentIndex--;
-        return this.queue_[MusicGuild.currentIndex];
-    }
-    currentSong() {
-        return this.queue_[MusicGuild.currentIndex];
-    }
-    get queue() {
-        return this.queue_;
-    }
-    set queue(newVal) {
-        this.queue_ = newVal;
-    }
-    pause(msg) {
-        if (MusicGuild.connection == undefined) {
-            msg.reply('Error with connection');
-            return;
-        }
-        const embed = new discord_js_1.MessageEmbed();
-        embed.setColor('#A84300');
-        if (!MusicGuild.hasMusic) {
-            embed.setDescription("Livsi **doesn`t** have* music");
-            msg.channel.send(embed);
-            return;
-        }
-        if (!this.isPlaying) {
-            embed.setDescription('Livsi **already** has been **paused**');
-            msg.channel.send(embed);
-            return;
-        }
-        this.isPlaying = false;
-        MusicGuild.connection.dispatcher.pause();
-        embed.setDescription('Livsi has been **paused**');
-        msg.channel.send(embed);
-    }
-    resume(msg) {
-        if (MusicGuild.connection == undefined) {
-            msg.reply('Error with connection');
-            return;
-        }
-        const embed = new discord_js_1.MessageEmbed();
-        embed.setColor('#A84300');
-        if (!MusicGuild.hasMusic) {
-            embed.setDescription("Livsi *doesn`t have* music");
-            msg.channel.send(embed);
-            return;
-        }
-        if (this.isPlaying && MusicGuild.hasMusic) {
-            embed.setDescription('Livsi **already** has been **resumed**');
-            msg.channel.send(embed);
-            return;
-        }
-        this.isPlaying = true;
-        MusicGuild.connection.dispatcher.resume();
-        embed.setDescription('Livsi has been **resumed**');
-        msg.channel.send(embed);
-    }
+    // public prevSong(): Song | undefined{
+    //     if(MusicGuild.currentIndex - 1 == -1) return undefined;
+    //     MusicGuild.currentIndex--;
+    //     return this.queue_[MusicGuild.currentIndex];
+    // }
+    // public currentSong(): Song | undefined{
+    //     return this.queue_[MusicGuild.currentIndex];
+    // }
+    // public get queue(): Array<Song>{
+    //     return this.queue_;
+    // }
+    // public set queue(newVal: Array<Song>){
+    //     this.queue_ = newVal;
+    // }
+    // public pause(msg: Discord.Message): void {
+    //     if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return; }
+    //     const embed: Discord.MessageEmbed = new MessageEmbed();
+    //     embed.setColor('#A84300');
+    //     if(!this.hasMusic){
+    //         embed.setDescription("Livsi **doesn`t** have* music");
+    //         msg.channel.send(embed);
+    //         return;
+    //     }
+    //     if(!this.isPlaying){
+    //         embed.setDescription('Livsi **already** has been **paused**');
+    //         msg.channel.send(embed);
+    //         return;
+    //     }
+    //     this.isPlaying = false;
+    //     MusicGuild.connection.dispatcher.pause();
+    //     embed.setDescription('Livsi has been **paused**');
+    //     msg.channel.send(embed);
+    // }
+    // public resume(msg: Discord.Message): void {
+    //     if(MusicGuild.connection == undefined) { msg.reply('Error with connection'); return; }
+    //     const embed: Discord.MessageEmbed = new MessageEmbed();
+    //     embed.setColor('#A84300');
+    //     if(!MusicGuild.hasMusic){
+    //         embed.setDescription("Livsi *doesn`t have* music");
+    //         msg.channel.send(embed);
+    //         return;
+    //     }
+    //     if(this.isPlaying && MusicGuild.hasMusic){
+    //         embed.setDescription('Livsi **already** has been **resumed**');
+    //         msg.channel.send(embed);
+    //         return;
+    //     }
+    //     this.isPlaying = true;
+    //     MusicGuild.connection.dispatcher.resume();
+    //     embed.setDescription('Livsi has been **resumed**');
+    //     msg.channel.send(embed);
+    // }
     play(song, msg) {
-        if (MusicGuild.connection == undefined)
+        if (this.connection == undefined)
             return;
         try {
-            const dispatcher = MusicGuild.connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
+            const dispatcher = this.connection.play(ytdl_core_1.default(song.link), { highWaterMark: 1024 * 1024 * 10 });
             dispatcher.on('start', () => {
                 const embed = new discord_js_1.MessageEmbed();
                 embed.setColor('#A84300');
@@ -103,7 +97,7 @@ class MusicGuild {
                 if (nextSong == undefined) {
                     embed.setDescription(`I **don't have** song anymore`);
                     msg.channel.send(embed);
-                    MusicGuild.hasMusic = false;
+                    this.hasMusic = false;
                     MusicGuild.currentIndex++;
                     return;
                 }
@@ -150,6 +144,5 @@ class MusicGuild {
     }
 }
 exports.default = MusicGuild;
-MusicGuild.hasMusic = false;
 MusicGuild.currentIndex = 0;
 MusicGuild.currentSeconds = 0;
