@@ -3,10 +3,19 @@ import { Message } from 'discord.js';
 import config      from '../config';
 import BotCommands from "./BotCommands";
 
+/**
+ * ! create this bot how Singleton class
+ */
 
-export default class Bot extends BotCommands{
+export default class Bot extends BotCommands {
 
-    constructor(msg: Message){ super(msg); }
+    private static instance: Bot;
+
+    private constructor(){ super(); }
+
+    public static get Instance(): Bot{
+        return this.instance || (this.instance = new this());
+    }
 
     public async execute(): Promise<void> {
 

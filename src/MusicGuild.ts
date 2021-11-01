@@ -3,13 +3,6 @@ import ytdl                      from 'ytdl-core';
 import MessageEmbedAdapter       from './utils/MessageEmbedAdapter';
 import Song                      from './utils/Song';
 
-// export interface Song {
-//     link     : string;
-//     duration : string;
-//     name     : string;
-//     seconds  : number;
-//     thumbnail: string;
-// }
 
 
 export default class MusicGuild{
@@ -63,7 +56,6 @@ export default class MusicGuild{
     }
 
     public setConnection(connection: Discord.VoiceConnection): void {
-        console.log(connection);
         this.connection = connection;
     }
  

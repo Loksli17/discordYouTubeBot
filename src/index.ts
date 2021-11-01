@@ -14,7 +14,7 @@ class App{
         this.client.start();
     }
 
-    public static get Instance(){
+    public static get Instance(): App{
         return this.instance || (this.instance = new this());
     }
 }

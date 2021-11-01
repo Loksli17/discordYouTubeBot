@@ -30,7 +30,8 @@ export default class ClientAdapter {
                 return;
             }
 
-            const bot: Bot = new Bot(msg); //todo do Bot with singleton it is so important!!!
+            const bot: Bot = Bot.Instance; //todo do Bot with singleton it is so important!!!
+            bot.message = msg;
 
             const checkPrefixResult: boolean = bot.checkPrefix();
 

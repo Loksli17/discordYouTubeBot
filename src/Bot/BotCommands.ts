@@ -4,23 +4,19 @@ import Song                 from '../utils/Song';
 import YouTubeAdapter       from '../utils/YouTubeAdapter';
 import MessageEmbedAdapter  from '../utils/MessageEmbedAdapter';
 
-/**
- * ! create this bot how Singleton class
- */
 
-export default class BotCommands {
+export default abstract class BotCommands {
 
-    protected msg         : Message;
+    protected msg!        : Message;
     protected words       : Array<string>;
     protected guild       : MusicGuild;
     protected youtube     : YouTubeAdapter;
     protected messageEmded: MessageEmbedAdapter;
 
-    public get message(): Message { return this.msg }
+    public get message(): Message { return this.msg || null}
     public set message(msg: Message) { this.msg = msg }
 
-    constructor(msg: Message){
-        this.msg          = msg;
+    constructor(){
         this.guild        = new MusicGuild();
         this.youtube      = new YouTubeAdapter();
         this.words        = [];
@@ -41,6 +37,8 @@ export default class BotCommands {
             return;
         }
 
+        console.log(this.guild.isPlaying);
+
         connection = await channel?.join().catch(error => console.error(error));
 
         if(connection == undefined){
@@ -50,18 +48,7 @@ export default class BotCommands {
         }
 
         this.guild.setConnection(connection);
-        this.guild.play(song, this.msg);
-
-        // if(!this.guild.hasMusic){
-
-        //     this.guild.hasMusic   = true;
-        //     this.guild.connection = await channel?.join().catch(error => console.error(error));
-
-        //     if(this.guild.connection == undefined) { this.msg.reply('Error with connection'); return; }
-
-        //     this.guild.play(song, this.msg);
-        // }
-        
+        this.guild.play(song, this.msg);        
     }
 
     public pause() {
