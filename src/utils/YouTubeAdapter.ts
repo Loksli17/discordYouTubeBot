@@ -22,7 +22,9 @@ export default class YouTubeAdapter {
             durationData: any                   = undefined,
             data        : GaxiosResponse | void = undefined;
 
-        data = await this.youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => console.error(error));
+        data = await this.youtube.search.list({ part: ['snippet'], q: words.join(' '), maxResults: 1 }).catch(error => {
+            console.error(error);
+        });
 
         if(data == undefined) { throw new Error(); }
 

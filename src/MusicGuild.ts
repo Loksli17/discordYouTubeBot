@@ -1,25 +1,73 @@
 import Discord, { MessageEmbed } from 'discord.js';
 import ytdl                      from 'ytdl-core';
+import MessageEmbedAdapter       from './utils/MessageEmbedAdapter';
+import Song                      from './utils/Song';
 
-export interface Song {
-    link     : string;
-    duration : string;
-    name     : string;
-    seconds  : number;
-    thumbnail: string;
-}
+// export interface Song {
+//     link     : string;
+//     duration : string;
+//     name     : string;
+//     seconds  : number;
+//     thumbnail: string;
+// }
 
 
 export default class MusicGuild{
 
-    public hasMusic              : boolean     = false;
     public         isPlaying     : boolean     = false;
     private        queue_        : Array<Song> = [];
-    public static  currentIndex  : number      = 0;
-    public static  currentSeconds: number = 0;
-    public         connection    : Discord.VoiceConnection | undefined | void;
+    public  static currentIndex  : number      = 0;
+    public  static currentSeconds: number = 0;
+    public         connection    : Discord.VoiceConnection | undefined;
     private static interval      : NodeJS.Timeout;
+    private        messageEmded  : MessageEmbedAdapter = new MessageEmbedAdapter();
+
+
+    private createDispather(msg: Discord.Message, song: Song): Discord.StreamDispatcher {
+
+        const dispatcher: Discord.StreamDispatcher = this.connection!.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
+
+        dispatcher.on('start', () => {
+            
+            this.messageEmded.songStart(msg, song);
+
+            clearInterval(MusicGuild.interval);
+
+            MusicGuild.currentSeconds = 0;
+            MusicGuild.interval = setInterval(() => {
+                MusicGuild.currentSeconds++;
+            }, 1000);
+
+            this.isPlaying = true;
+        });
+
+        dispatcher.on('finish', () => {
+            
+            const nextSong: Song | undefined = this.nextSong();
+            
+            this.messageEmded.songEnd(msg, song);
+            
+            if(nextSong == undefined){
+                this.messageEmded.noSongs(msg, song);
+                this.isPlaying = false;
+                MusicGuild.currentIndex++;
+                return;
+            }
+
+            this.play(nextSong, msg);
+            
+            this.isPlaying = false;
+        });
+
+        return dispatcher;
+    }
+
+    public setConnection(connection: Discord.VoiceConnection): void {
+        console.log(connection);
+        this.connection = connection;
+    }
  
+
     public addSong(song: Song): void{
         this.queue_.push(song);
     }
@@ -110,102 +158,14 @@ export default class MusicGuild{
 
     public play(song: Song, msg: Discord.Message): void{
 
-        if(this.connection == undefined) return;
-        
+        if(this.isPlaying){
+            return;
+        }
+
         try {
-            const dispatcher: Discord.StreamDispatcher = this.connection!.play(ytdl(song.link), {highWaterMark: 1024 * 1024 * 10});
-
-            dispatcher.on('start', () => {
-                const embed: Discord.MessageEmbed = new MessageEmbed();
-
-                embed.setColor('#A84300');
-                embed.setDescription(`Song **${song.name}** was **started** with duration **${song.duration}**`);
-                msg.channel.send(embed);
-
-                clearInterval(MusicGuild.interval);
-                MusicGuild.currentSeconds = 0;
-                MusicGuild.interval = setInterval(() => {
-                    MusicGuild.currentSeconds++;
-                }, 1000);
-
-                this.isPlaying = true;
-            });
-
-            dispatcher.on('finish', () => {
-                
-                const
-                    embed   : Discord.MessageEmbed = new MessageEmbed(), 
-                    nextSong: Song | undefined     = this.nextSong();
-
-                embed.setColor('#A84300');
-                embed.setDescription(`Song **${song.name}** was **ended** with duration **${song.duration}**`);
-                msg.channel.send(embed);
-                
-                if(nextSong == undefined){
-                    embed.setDescription(`I **don't have** song anymore`);
-                    msg.channel.send(embed);
-                    this.hasMusic = false;
-                    MusicGuild.currentIndex++;
-                    return;
-                }
-
-                this.play(nextSong, msg);
-                
-                this.isPlaying = false;
-            });
+           this.createDispather(msg, song); 
         } catch (error) {
             console.error(error);
-        }
-        
+        }   
     }
-
-    
-    public formatDuration(duration: string): {duration: string; seconds: number} {
-
-        let 
-            min: string = '',
-            sec: string = '',
-            hou: string = '';
-
-        let result: RegExpMatchArray | null = duration.match(/\d+H/g);
-        hou = result != null ? result[0] : '00';
-        if(hou.length == 2) hou = "0" + hou;
-        hou = hou.substr(0, 2);
-
-        result = duration.match(/\d+M/g);
-        min = result != null ? result[0] : '00';
-        if(min.length == 2) min = "0" + min;
-        min = min.substr(0, 2);
-
-        result = duration.match(/\d+S/g);
-        sec = result != null ? result[0] : '00';
-        if(sec.length == 2) sec = "0" + sec;
-        sec = sec.substr(0, 2);
-        
-        return {
-            duration: `${hou}:${min}:${sec}`,
-            seconds : Number(hou) * 3600 + Number(min) * 60 + Number(sec) 
-        };
-    }
-
-
-    public formatSeconds(curSec: number): string{
-
-        let 
-            min: number = Math.floor(curSec / 60),
-            h  : number = Math.floor(curSec / 3600),
-            sec: number = curSec - min * 60;
-
-        let
-            minStr: string = min.toString(),
-            hStr  : string = h.toString(),
-            secStr: string = sec.toString();
-
-        if(hStr.length == 1) hStr = "0" + hStr;
-        if(minStr.length == 1) minStr = "0" + minStr;
-        if(secStr.length == 1) secStr = "0" + secStr;
-
-        return `${hStr}:${minStr}:${secStr}`;
-    }
-
 }
