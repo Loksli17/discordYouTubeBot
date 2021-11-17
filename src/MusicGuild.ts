@@ -151,6 +151,7 @@ export default class MusicGuild{
     public play(song: Song, msg: Discord.Message): void{
 
         if(this.isPlaying){
+            //todo play next song in queue 
             return;
         }
 
