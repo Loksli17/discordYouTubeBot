@@ -6,6 +6,7 @@ interface SongProps {
     thumbnail: string;
 }
 
+//todo refactor this class!!
 
 export default class Song implements SongProps{
 
@@ -14,8 +15,6 @@ export default class Song implements SongProps{
     public name     : string = "";
     public seconds  : number = 0;
     public thumbnail: string = "";
-
-    constructor() { }
 
     public setLink(link: string): Song {
         this.link = link;

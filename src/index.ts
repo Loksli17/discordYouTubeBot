@@ -1,7 +1,7 @@
 import ClientAdapter from './ClientAdapter';
 
 
-//todo 1. env file for tokens!! 2. think about global discordMessage!!!
+//todo 1. fix add to queue!! 2. think about global discordMessage!!!
 
 class App{
 
