@@ -1,6 +1,8 @@
 import ClientAdapter from './ClientAdapter';
 
 
+//todo 1. env file for tokens!! 2. think about global discordMessage!!!
+
 class App{
 
     private       client  : ClientAdapter;

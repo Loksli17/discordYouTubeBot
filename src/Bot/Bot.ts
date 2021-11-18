@@ -3,9 +3,6 @@ import { Message } from 'discord.js';
 import config      from '../config';
 import BotCommands from "./BotCommands";
 
-/**
- * ! create this bot how Singleton class
- */
 
 export default class Bot extends BotCommands {
 

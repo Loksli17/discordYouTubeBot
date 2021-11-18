@@ -22,12 +22,16 @@ export default class MessageEmbedAdapter{
         this.messageWithDescription(msg, `Song **${song.name}** was **ended** with duration **${song.duration}**`);
     }
 
-    public noSongs(msg: Discord.Message, song: Song): void{
+    public noSongs(msg: Discord.Message): void{
         this.messageWithDescription(msg, `I **don't have** song anymore`);
     }
 
     public joinVoiceChannelWarning(msg: Discord.Message){
         this.messageWithDescription(msg, `Before playing you should **join to voice channel**`);
+    }
+
+    public dispatcherProblem(msg: Discord.Message){
+        this.messageWithDescription(msg, `Problems with dispather`);
     }
 
 }

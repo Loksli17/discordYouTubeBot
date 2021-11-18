@@ -1,5 +1,5 @@
 import Discord, { Message } from 'discord.js'
-import MusicGuild           from '../MusicGuild';
+import MusicGuild           from '../MusicGuild/MusicGuild';
 import Song                 from '../utils/Song';
 import YouTubeAdapter       from '../utils/YouTubeAdapter';
 import MessageEmbedAdapter  from '../utils/MessageEmbedAdapter';
@@ -7,14 +7,15 @@ import MessageEmbedAdapter  from '../utils/MessageEmbedAdapter';
 
 export default abstract class BotCommands {
 
-    protected msg!        : Message;
+    protected msg!        : Message;      //todo rename it to discord message
     protected words       : Array<string>;
     protected guild       : MusicGuild;
     protected youtube     : YouTubeAdapter;
     protected messageEmded: MessageEmbedAdapter;
 
-    public get message(): Message { return this.msg || null}
+    public get message(): Message { return this.msg || null }
     public set message(msg: Message) { this.msg = msg }
+
 
     constructor(){
         this.guild        = new MusicGuild();
@@ -32,14 +33,13 @@ export default abstract class BotCommands {
             song      : Song                        = await this.youtube.searchSong(this.words);
 
         this.guild.addSong(song);
+        this.guild.message = this.msg;
         
-        if(this.guild.isPlaying){
-            return;
-        }
-
-        console.log(this.guild.isPlaying);
+        if(this.guild.isPlaying) return;
 
         connection = await channel?.join().catch(error => console.error(error));
+
+        console.log('conn:', connection);
 
         if(connection == undefined){
             this.messageEmded.joinVoiceChannelWarning(this.msg);
@@ -47,9 +47,10 @@ export default abstract class BotCommands {
             return;
         }
 
-        this.guild.setConnection(connection);
+        this.guild.connection = connection;
         this.guild.play(song, this.msg);        
     }
+
 
     public pause() {
         console.log('pause');
