@@ -4,7 +4,7 @@ import MusicGuild          from './MusicGuild';
 import Song                from '../utils/Song';
 
 
-export default class DispatherFactory {
+export default class DispatherDecorator {
 
     private static messageEmded: MessageEmbedAdapter = new MessageEmbedAdapter();
 

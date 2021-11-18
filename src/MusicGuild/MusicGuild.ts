@@ -2,7 +2,7 @@ import Discord, {  Message } from 'discord.js';
 import ytdl                  from 'ytdl-core';
 import MessageEmbedAdapter   from '../utils/MessageEmbedAdapter';
 import Song                  from '../utils/Song';
-import DispatherFactory      from './DispatherFactory';
+import DispatherDecorator    from './DispatherDecorator';
 
 
 export default class MusicGuild{
@@ -39,49 +39,8 @@ export default class MusicGuild{
     public get currentIndex(): number    { return this.currentIndex_ }
     public set currentIndex(val: number) { this.currentIndex_ = val }
 
+
     
-    // private createDispather(msg: Discord.Message, song: Song): Discord.StreamDispatcher {
-
-    //     // const test: any = this.connection?.dispatcher
-
-    //     const dispatcher: Discord.StreamDispatcher = this.connection!.play(ytdl(song.link), { highWaterMark: 1024 * 1024 * 10 });
-
-    //     dispatcher.on('start', () => {
-            
-    //         this.messageEmded.songStart(msg, song);
-
-    //         clearInterval(MusicGuild.interval);
-
-    //         MusicGuild.currentSeconds = 0;
-    //         MusicGuild.interval = setInterval(() => {
-    //             MusicGuild.currentSeconds++;
-    //         }, 1000);
-
-    //         this.isPlaying = true;
-    //     });
-
-    //     dispatcher.on('finish', () => {
-            
-    //         const nextSong: Song | undefined = this.nextSong();
-            
-    //         this.messageEmded.songEnd(msg, song);
-            
-    //         if(nextSong == undefined){
-    //             this.messageEmded.noSongs(msg, song);
-    //             this.isPlaying = false;
-    //             MusicGuild.currentIndex++;
-    //             return;
-    //         }
-
-    //         this.play(nextSong, msg);
-            
-    //         this.isPlaying = false;
-    //     });
-
-    //     return dispatcher;
-    // }
-
-
     public addSong(song: Song): void { this.queue_.push(song); }
 
     public getCurrentSong(): Song { return this.queue_[this.currentIndex_]; }
@@ -171,11 +130,9 @@ export default class MusicGuild{
 
     public play(song: Song): void {
 
-        console.log('dispatcher:', this.connection.dispatcher);
-
         try {
             this.dispatcher = this.connection!.play(ytdl(song.link), { highWaterMark: 1024 * 1024 * 10 });
-            this.dispatcher = DispatherFactory.execute(this, this.dispatcher); 
+            this.dispatcher = DispatherDecorator.execute(this, this.dispatcher); 
         } catch (error) {
             this.messageEmded.playError(this.discordMessage_, song);
             console.error(error);
