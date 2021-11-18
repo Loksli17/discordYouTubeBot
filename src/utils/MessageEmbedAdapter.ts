@@ -34,4 +34,8 @@ export default class MessageEmbedAdapter{
         this.messageWithDescription(msg, `Problems with dispather`);
     }
 
+    public playError(msg: Discord.Message, song: Song){
+        this.messageWithDescription(msg, `Error when trying to play song ${song.name}`);
+    }
+
 }

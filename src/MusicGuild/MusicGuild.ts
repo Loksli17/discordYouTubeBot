@@ -1,36 +1,45 @@
-import Discord, {  Message }     from 'discord.js';
-import ytdl                      from 'ytdl-core';
-import MessageEmbedAdapter       from '../utils/MessageEmbedAdapter';
-import Song                      from '../utils/Song';
-import DispatherFactory          from './DispatherFactory';
+import Discord, {  Message } from 'discord.js';
+import ytdl                  from 'ytdl-core';
+import MessageEmbedAdapter   from '../utils/MessageEmbedAdapter';
+import Song                  from '../utils/Song';
+import DispatherFactory      from './DispatherFactory';
 
 
 export default class MusicGuild{
 
-    public  isPlaying: boolean     = false;
-    private queue_   : Array<Song> = [];
+    private isPlaying_: boolean     = false;
+    private queue_    : Array<Song> = [];
     
-    public  static currentIndex  : number = 0;
-    public  static currentSeconds: number = 0;
-    private static interval      : NodeJS.Timeout;
+    private currentIndex_   : number = 0;
+    private currentSeconds_ : number = 0;
+    private interval_!      : NodeJS.Timeout;
     
-    private connection_!   : Discord.VoiceConnection;
-    private dispather      : Discord.StreamDispatcher;
-    private discordMessage!: Message;
+    private connection_!    : Discord.VoiceConnection;
+    private dispatcher!     : Discord.StreamDispatcher;
+    private discordMessage_!: Message;
    
     private messageEmded: MessageEmbedAdapter = new MessageEmbedAdapter();
     
 
-    constructor(){
-        this.dispather = DispatherFactory.execute(this.connection_);
-    }
+    public get discordMessage(): Message    { return this.discordMessage_ || null} 
+    public set discordMessage(val: Message) { this.discordMessage_ = val }
 
-    public get message(): Message    { return this.discordMessage || null} 
-    public set message(msg: Message) { this.discordMessage = msg }
+    public get connection(): Discord.VoiceConnection    { return this.connection_ || null }
+    public set connection(val: Discord.VoiceConnection) { this.connection_ = val; }
 
-    public get connection(): Discord.VoiceConnection           { return this.connection_ || null }
-    public set connection(connection: Discord.VoiceConnection) { this.connection_ = connection }
+    public get isPlaying(): boolean    { return this.isPlaying_ }
+    public set isPlaying(val: boolean) { this.isPlaying_ = val }
 
+    public get interval(): NodeJS.Timeout    { return this.interval_ }
+    public set interval(val: NodeJS.Timeout) { this.interval_ = val }
+
+    public get currentSeconds(): number    { return this.currentSeconds_ }
+    public set currentSeconds(val: number) { this.currentSeconds_ = val }
+
+    public get currentIndex(): number    { return this.currentIndex_ }
+    public set currentIndex(val: number) { this.currentIndex_ = val }
+
+    
     // private createDispather(msg: Discord.Message, song: Song): Discord.StreamDispatcher {
 
     //     // const test: any = this.connection?.dispatcher
@@ -73,15 +82,14 @@ export default class MusicGuild{
     // }
 
 
-    public addSong(song: Song): void{
-        this.queue_.push(song);
-    }
+    public addSong(song: Song): void { this.queue_.push(song); }
 
-    
+    public getCurrentSong(): Song { return this.queue_[this.currentIndex_]; }
+
     public nextSong(): Song | undefined {
-        if(MusicGuild.currentIndex + 1 == this.queue_.length) return undefined;
-        MusicGuild.currentIndex++;
-        return this.queue_[MusicGuild.currentIndex];
+        if(this.currentIndex_ + 1 == this.queue_.length) return undefined;
+        this.currentIndex_;
+        return this.queue_[this.currentIndex_];
     }
 
 
@@ -161,16 +169,16 @@ export default class MusicGuild{
     // }
 
 
-    public play(song: Song, msg: Discord.Message): void{
+    public play(song: Song): void {
 
-        if(this.isPlaying){
-            return;
-        }
+        console.log('dispatcher:', this.connection.dispatcher);
 
         try {
-        //    this.createDispather(msg, song); 
+            this.dispatcher = this.connection!.play(ytdl(song.link), { highWaterMark: 1024 * 1024 * 10 });
+            this.dispatcher = DispatherFactory.execute(this, this.dispatcher); 
         } catch (error) {
+            this.messageEmded.playError(this.discordMessage_, song);
             console.error(error);
-        }   
+        }  
     }
 }

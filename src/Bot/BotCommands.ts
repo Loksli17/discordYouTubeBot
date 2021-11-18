@@ -29,17 +29,16 @@ export default abstract class BotCommands {
         
         let 
             connection: any, 
-            channel   : Discord.VoiceChannel | null = this.msg.member!.voice.channel,
-            song      : Song                        = await this.youtube.searchSong(this.words);
+            channel   : Discord.VoiceChannel | null = this.msg.member!.voice.channel,  //todo fix this
+            song      : Song                        = await this.youtube.searchSong(this.words); //todo fix this
 
         this.guild.addSong(song);
-        this.guild.message = this.msg;
+        this.guild.discordMessage = this.msg;
         
         if(this.guild.isPlaying) return;
 
-        connection = await channel?.join().catch(error => console.error(error));
 
-        console.log('conn:', connection);
+        connection = await channel?.join().catch(error => console.error(error));
 
         if(connection == undefined){
             this.messageEmded.joinVoiceChannelWarning(this.msg);
@@ -48,7 +47,7 @@ export default abstract class BotCommands {
         }
 
         this.guild.connection = connection;
-        this.guild.play(song, this.msg);        
+        this.guild.play(song);        
     }
 
 

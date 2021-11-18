@@ -45,6 +45,8 @@ export default class YouTubeAdapter {
         let { duration, seconds } = TimeFormatter.formatDuration(durationData.data.items[0].contentDetails.duration);
 
         song.setDuration(duration).setLink(link).setName(videoName).setSeconds(seconds).setThumbnail(thumbnail);
+
+        console.log('song:', song);
         
         return song;
     }
