@@ -66,7 +66,7 @@ export default class MusicGuild{
 
     public nextSong(): Song | undefined {
         if(this.currentIndex_ + 1 == this.queue_.length) return undefined;
-        this.currentIndex_;
+        this.currentIndex_++;
         return this.queue_[this.currentIndex_];
     }
 

@@ -1,7 +1,10 @@
 import ClientAdapter from './ClientAdapter';
 
 
-//todo 1. fix add to queue!! 2. think about global discordMessage!!!
+//todo
+//  1. when youtube search music problems can make with filter
+//! 2. catch youtude errors, send message to user and don't add music in queue!!!!
+//  3. add comments in all classes
 
 class App{
 
