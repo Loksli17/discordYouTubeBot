@@ -5,7 +5,7 @@ import Song                  from '../utils/Song';
 import DispatherDecorator    from './DispatherDecorator';
 
 
-export default class MusicGuild{
+export default class MusicGuild {
 
     private isPlaying_: boolean     = false;
     private queue_    : Array<Song> = [];

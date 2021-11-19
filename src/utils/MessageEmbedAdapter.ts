@@ -14,12 +14,13 @@ export default class MessageEmbedAdapter{
         msg.channel.send(embed);
     }
 
-    private messageWithField(title: string, fieldTop: string, fieldContent: string, thumbnail: string): void {
+    private messageWithField(msg: Discord.Message, title: string, fieldTop: string, fieldContent: string, thumbnail: string): void {
         const embed: Discord.MessageEmbed = new MessageEmbed();
         embed.setColor(this.color);
         embed.setTitle(title);
         embed.addField(fieldTop, fieldContent);
         embed.setThumbnail(thumbnail);
+        msg.channel.send(embed);
     }
 
 
@@ -95,14 +96,7 @@ export default class MessageEmbedAdapter{
         for(let i = 1; i <= percent; i++)   { percentStr += '#'}
         for(let i = percent; i <= 40; i ++) { percentStr += '='}
 
-        const embed: Discord.MessageEmbed = new MessageEmbed();
-
-        // embed.setColor('#A84300');
-        // embed.setTitle(`Current song`);
-        // embed.addField(`#${currentIndex + 1}: ${song.name}`, `${percentStr} [${TimeFormatter.formatSeconds(currentSeconds)} / ${song.duration}]`);
-        // embed.setThumbnail(song.thumbnail);
-
-        msg.channel.send(embed);
+        this.messageWithField(msg, `Current song`, `#${currentIndex + 1}: ${song.name}`, `${percentStr} [${TimeFormatter.formatSeconds(currentSeconds)} / ${song.duration}]`, song.thumbnail);
     }
 
 }

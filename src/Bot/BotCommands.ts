@@ -13,7 +13,7 @@ export default abstract class BotCommands {
     protected youtube     : YouTubeAdapter;
     protected messageEmded: MessageEmbedAdapter;
 
-    public get message(): Message { return this.msg || null }
+    public get message(): Message    { return this.msg || null }
     public set message(msg: Message) { this.msg = msg }
 
 
@@ -79,7 +79,7 @@ export default abstract class BotCommands {
 
         if(song == undefined) { this.msg.reply('No more songs'); return; }
 
-        // this.messageEmded.current(this.msg, this.guild.getCurrentSong(), this.guild.currentIndex, this.guild.currentSeconds);
+        this.messageEmded.showCurrentSong(this.msg, this.guild.getCurrentSong()!, this.guild.currentIndex, this.guild.currentSeconds);
     }
 
 

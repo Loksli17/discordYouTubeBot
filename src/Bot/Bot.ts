@@ -14,6 +14,7 @@ export default class Bot extends BotCommands {
         return this.instance || (this.instance = new this());
     }
 
+    
     public async execute(): Promise<void> {
 
         let 

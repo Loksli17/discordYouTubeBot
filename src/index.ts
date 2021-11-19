@@ -2,9 +2,11 @@ import ClientAdapter from './ClientAdapter';
 
 
 //todo
-//  1. when youtube search music problems can make with filter
-//! 2. catch youtude errors, send message to user and don't add music in queue!!!!
+//  1. when youtube search music problems can make with filter (Livsi play Valchala)
+//! 2. catch youtude errors (Livsi play  Valchala Асений Карпов, Livsi play let's f*ck.. go), send message to user and don't add music in queue!!!!
 //  3. add comments in all classes
+//! 4. check prefix and don't command if message has not prefix
+
 
 class App{
 
