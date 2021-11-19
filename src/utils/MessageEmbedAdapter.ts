@@ -60,6 +60,10 @@ export default class MessageEmbedAdapter{
         this.messageWithDescription(msg, `Queue has been **cleared**`);
     }
 
+    public firstSong(msg: Discord.Message){
+        this.messageWithDescription(msg, `Current song is already has index **1**`);
+    }
+
     
     public showQueue(msg: Discord.Message, queue: Array<Song>, currentIndex: number) {
         

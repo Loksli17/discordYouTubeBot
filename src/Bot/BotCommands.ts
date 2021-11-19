@@ -64,22 +64,38 @@ export default abstract class BotCommands {
     }
 
 
-    public prev() {
-        console.log('prev');
+    public prev(): void {
+        const prevSong: Song | undefined = this.guild.prevSong();
+        
+        if(prevSong == undefined){
+            this.messageEmded.firstSong(this.guild.discordMessage);
+            this.guild.isPlaying = false;
+            this.guild.currentIndex++;
+            return;
+        }
+
+        this.guild.play(prevSong);
     }
 
 
-    public next() {
-        console.log('next');
+    public next(): void {
+        const nextSong: Song | undefined = this.guild.nextSong();
+        
+        if(nextSong == undefined){
+            this.messageEmded.noSongs(this.guild.discordMessage);
+            this.guild.isPlaying = false;
+            this.guild.currentIndex++;
+            return;
+        }
+
+        this.guild.play(nextSong);
     }
 
 
     public current() {
-        const song: Song | undefined = this.guild.getCurrentSong();
-
+        const song: Song | undefined = this.guild.currentSong();
         if(song == undefined) { this.msg.reply('No more songs'); return; }
-
-        this.messageEmded.showCurrentSong(this.msg, this.guild.getCurrentSong()!, this.guild.currentIndex, this.guild.currentSeconds);
+        this.messageEmded.showCurrentSong(this.msg, this.guild.currentSong()!, this.guild.currentIndex, this.guild.currentSeconds);
     }
 
 

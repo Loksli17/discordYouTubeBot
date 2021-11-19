@@ -50,7 +50,7 @@ export default class MusicGuild {
      */
     public addSong(song: Song): void { this.queue_.push(song); }
 
-    public getCurrentSong(): Song | undefined { return this.queue_[this.currentIndex_]; }
+    public currentSong(): Song | undefined { return this.queue_[this.currentIndex_]; }
 
     public removeSong(index: number): void {
         this.queue_ = this.queue_.filter((song: Song, songInd: number) => songInd != index);
@@ -70,6 +70,12 @@ export default class MusicGuild {
         return this.queue_[this.currentIndex_];
     }
 
+    public prevSong(): Song | undefined{
+        if(this.currentIndex - 1 == -1) return undefined;
+        this.currentIndex--;
+        return this.queue_[this.currentIndex];
+    }
+
     /**
      * @returns void
      */
@@ -77,20 +83,6 @@ export default class MusicGuild {
         this.isPlaying_ = false;
         this.connection_.dispatcher.destroy(); //todo finish playing with another way it's bad variant
     }
-
-    // public prevSong(): Song | undefined{
-    //     if(MusicGuild.currentIndex - 1 == -1) return undefined;
-    //     MusicGuild.currentIndex--;
-    //     return this.queue_[MusicGuild.currentIndex];
-    // }
-
-
-    // public currentSong(): Song | undefined{
-    //     return this.queue_[MusicGuild.currentIndex];
-    // }
-
-
-    
 
 
     // public pause(msg: Discord.Message): void {
