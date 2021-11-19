@@ -82,7 +82,7 @@ export default abstract class BotCommands {
 
 
     public remove() {
-        const index: number = Number(this.words[1]) - 1;
+        const index: number = Number(this.words[2]) - 1;
         
         if(Number(isNaN)) {
             this.messageEmded.unexpectedIndex(this.msg, this.guild.amountSongs());
