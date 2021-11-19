@@ -25,6 +25,10 @@ export default abstract class BotCommands {
     }
 
 
+    /**
+     * todo check joing bot to channel
+     * @returns Promise<void>
+     */
     public async play(): Promise<void> {
         
         let 
@@ -81,8 +85,10 @@ export default abstract class BotCommands {
 
 
     /**
-     * todo stop playing if remove current song???
-     * @
+     * this method removes song with entering index
+     * if guild doen't has song user will get embed message
+     * if user removes current song playing will be destroy() 
+     * @returns void
      */
     public remove(): void {
         let

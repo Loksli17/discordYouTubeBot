@@ -40,7 +40,11 @@ export default class MusicGuild{
     public set currentIndex(val: number) { this.currentIndex_ = val }
 
 
-    
+    /**
+     * 
+     * @param song 
+     * @returns void
+     */
     public addSong(song: Song): void { this.queue_.push(song); }
 
     public getCurrentSong(): Song { return this.queue_[this.currentIndex_]; }
@@ -63,7 +67,9 @@ export default class MusicGuild{
         return this.queue_[this.currentIndex_];
     }
 
-
+    /**
+     * @returns void
+     */
     public stop(): void {
         this.connection_.dispatcher.destroy();
     }
@@ -144,6 +150,10 @@ export default class MusicGuild{
     // }
 
 
+    /**
+     * @param song 
+     * @returns void
+     */
     public play(song: Song): void {
 
         try {
