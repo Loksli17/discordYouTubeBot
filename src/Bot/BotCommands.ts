@@ -25,7 +25,7 @@ export default abstract class BotCommands {
     }
 
 
-    public async play() {
+    public async play(): Promise<void> {
         
         let 
             connection: any, 
@@ -36,7 +36,6 @@ export default abstract class BotCommands {
         this.guild.discordMessage = this.msg;
         
         if(this.guild.isPlaying) return;
-
 
         connection = await channel?.join().catch(error => console.error(error));
 
@@ -81,20 +80,36 @@ export default abstract class BotCommands {
     }
 
 
-    public remove() {
-        const index: number = Number(this.words[2]) - 1;
+    /**
+     * todo stop playing if remove current song???
+     * @
+     */
+    public remove(): void {
+        let
+            song : Song | undefined = undefined, 
+            index: number           = Number(this.words[2]) - 1;
+
+        if(!this.guild.amountSongs){
+            this.messageEmded.noSongs(this.msg);
+            return;
+        }
         
         if(Number(isNaN)) {
             this.messageEmded.unexpectedIndex(this.msg, this.guild.amountSongs());
             return;
         }
 
-        if(this.guild.getSong(index) == undefined) {
+        song = this.guild.getSong(index);
+
+        if(song == undefined) {
             this.messageEmded.unexpectedIndex(this.msg, this.guild.amountSongs());
             return;
         }
 
         this.guild.removeSong(index);
+        this.messageEmded.deletedSong(this.msg, song);
+
+        if(this.guild.currentIndex == index) this.guild.stop();
     }
 
 

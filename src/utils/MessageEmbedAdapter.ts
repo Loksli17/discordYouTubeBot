@@ -42,4 +42,8 @@ export default class MessageEmbedAdapter{
         this.messageWithDescription(msg, `Index must be from **1** to **${len}**`);
     }
 
+    public deletedSong(msg: Discord.Message, song: Song){
+        this.messageWithDescription(msg, `Song: **${song.name}** was removed`);
+    }
+
 }

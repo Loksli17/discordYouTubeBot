@@ -64,6 +64,10 @@ export default class MusicGuild{
     }
 
 
+    public stop(): void {
+        this.connection_.dispatcher.destroy();
+    }
+
     // public prevSong(): Song | undefined{
     //     if(MusicGuild.currentIndex - 1 == -1) return undefined;
     //     MusicGuild.currentIndex--;
