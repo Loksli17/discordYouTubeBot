@@ -60,7 +60,7 @@ export default abstract class BotCommands {
 
 
     public resume() {
-        console.log('resume(');
+        console.log('resume');
     }
 
 
@@ -89,6 +89,10 @@ export default abstract class BotCommands {
         }
 
         this.guild.play(nextSong);
+    }
+
+    public jump(): void {
+        console.log('jump');
     }
 
 

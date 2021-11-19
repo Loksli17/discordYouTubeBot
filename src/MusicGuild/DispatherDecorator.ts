@@ -27,9 +27,10 @@ export default class DispatherDecorator {
 
     private static createFinish(guild: MusicGuild): () => void {
         return () => {
-            const nextSong: Song | undefined = guild.nextSong();
             
             this.messageEmded.songEnd(guild.discordMessage, guild.currentSong()!);
+
+            const nextSong: Song | undefined = guild.nextSong();
             
             if(nextSong == undefined){
                 this.messageEmded.noSongs(guild.discordMessage);

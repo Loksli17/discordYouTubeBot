@@ -43,6 +43,9 @@ export default class Bot extends BotCommands {
             case 'next':
                 this.next();
                 break;
+            case 'jump':
+                this.jump();
+                break;
             case 'current':
                 this.current();
                 break;

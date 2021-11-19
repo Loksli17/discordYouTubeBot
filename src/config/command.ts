@@ -10,6 +10,7 @@ export default [
     'current',
     'queue',
     'remove',
+    'jump',
     
     'clearQueue',
 
