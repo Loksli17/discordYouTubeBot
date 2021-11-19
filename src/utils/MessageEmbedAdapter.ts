@@ -38,4 +38,8 @@ export default class MessageEmbedAdapter{
         this.messageWithDescription(msg, `Error when trying to play song ${song.name}`);
     }
 
+    public unexpectedIndex(msg: Discord.Message, len: number){
+        this.messageWithDescription(msg, `Index must be from **1** to **${len}**`);
+    }
+
 }

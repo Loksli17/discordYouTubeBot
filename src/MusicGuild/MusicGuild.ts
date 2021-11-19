@@ -45,6 +45,18 @@ export default class MusicGuild{
 
     public getCurrentSong(): Song { return this.queue_[this.currentIndex_]; }
 
+    public removeSong(index: number): void {
+        this.queue_ = this.queue_.filter((song: Song, songInd: number) => songInd != index);
+    }
+
+    public getSong(index: number): Song | undefined {
+        return this.queue_[index];
+    }
+
+    public amountSongs(): number {
+        return this.queue_.length;
+    }
+
     public nextSong(): Song | undefined {
         if(this.currentIndex_ + 1 == this.queue_.length) return undefined;
         this.currentIndex_;

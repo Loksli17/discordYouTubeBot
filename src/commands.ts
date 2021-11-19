@@ -190,7 +190,7 @@
 //             embed.setDescription(`Song: **${musicGuild.queue[index - 1].name}** was removed`);
 //             msg.channel.send(embed);
 
-//             musicGuild.queue = musicGuild.queue.filter((song: Song, songInd: number) => songInd != index - 1);
+    //             musicGuild.queue = musicGuild.queue.filter((song: Song, songInd: number) => songInd != index - 1);
 //         },
 //     }
 // ];
