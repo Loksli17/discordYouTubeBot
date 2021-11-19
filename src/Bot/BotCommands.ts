@@ -80,7 +80,7 @@ export default abstract class BotCommands {
 
 
     public queue() {
-        console.log('queue');
+        this.messageEmded.showQueue(this.msg, this.guild.queue, this.guild.currentIndex)
     }
 
 

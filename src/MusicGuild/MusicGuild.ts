@@ -39,6 +39,9 @@ export default class MusicGuild{
     public get currentIndex(): number    { return this.currentIndex_ }
     public set currentIndex(val: number) { this.currentIndex_ = val }
 
+    public get queue(): Array<Song>       { return this.queue_ }
+    public set queue(newVal: Array<Song>) { this.queue_ = newVal }
+
 
     /**
      * 
@@ -86,14 +89,7 @@ export default class MusicGuild{
     // }
 
 
-    // public get queue(): Array<Song>{
-    //     return this.queue_;
-    // }
-
-
-    // public set queue(newVal: Array<Song>){
-    //     this.queue_ = newVal;
-    // }
+    
 
 
     // public pause(msg: Discord.Message): void {

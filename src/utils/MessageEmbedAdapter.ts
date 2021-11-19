@@ -46,4 +46,27 @@ export default class MessageEmbedAdapter{
         this.messageWithDescription(msg, `Song: **${song.name}** was removed`);
     }
 
+    
+    public showQueue(msg: Discord.Message, queue: Array<Song>, currentIndex: number){
+        
+        let
+            embed: Discord.MessageEmbed = new MessageEmbed(),
+            songs: Array<Song>          = queue,
+            start: number               = (currentIndex - 4) > 0          ? currentIndex - 4 : 0,
+            end  : number               = currentIndex + 5 > songs.length ? songs.length     : currentIndex + 5;
+
+        embed.setColor('#A84300');
+        embed.setTitle('Queue');
+        
+        for(let i = start; i < end; i++){
+            if(i == currentIndex){
+                embed.addField(`\u200b`, `**-----> #${i + 1}**:` + "```css\n" + `[${songs[i].name}] - ${songs[i].duration}` + "\n```");
+            }else{
+                embed.addField(`\u200b`, `**#${i + 1}**: ${songs[i].name} - ${songs[i].duration}`);
+            }
+        }
+        
+        msg.channel.send(embed);
+    }
+
 }
