@@ -50,7 +50,7 @@ export default class MusicGuild{
      */
     public addSong(song: Song): void { this.queue_.push(song); }
 
-    public getCurrentSong(): Song { return this.queue_[this.currentIndex_]; }
+    public getCurrentSong(): Song | undefined { return this.queue_[this.currentIndex_]; }
 
     public removeSong(index: number): void {
         this.queue_ = this.queue_.filter((song: Song, songInd: number) => songInd != index);
@@ -74,7 +74,8 @@ export default class MusicGuild{
      * @returns void
      */
     public stop(): void {
-        this.connection_.dispatcher.destroy();
+        this.isPlaying_ = false;
+        this.connection_.dispatcher.destroy(); //todo finish playing with another way it's bad variant
     }
 
     // public prevSong(): Song | undefined{

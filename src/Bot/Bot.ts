@@ -51,8 +51,8 @@ export default class Bot extends BotCommands {
             case 'remove':
                 this.remove();
                 break;
-            case 'remove':
-                this.remove();
+            case 'clearQueue':
+                this.clearQueue();
                 break;
             case 'sayAhaha':
                 this.remove();

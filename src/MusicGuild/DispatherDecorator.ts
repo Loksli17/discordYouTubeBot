@@ -11,7 +11,7 @@ export default class DispatherDecorator {
     private static createStart(guild: MusicGuild): () => void{
         return () => {
             
-            this.messageEmded.songStart(guild.discordMessage, guild.getCurrentSong());
+            this.messageEmded.songStart(guild.discordMessage, guild.getCurrentSong()!);
 
             clearInterval(guild.interval);
 
@@ -29,7 +29,7 @@ export default class DispatherDecorator {
         return () => {
             const nextSong: Song | undefined = guild.nextSong();
             
-            this.messageEmded.songEnd(guild.discordMessage, guild.getCurrentSong());
+            this.messageEmded.songEnd(guild.discordMessage, guild.getCurrentSong()!);
             
             if(nextSong == undefined){
                 this.messageEmded.noSongs(guild.discordMessage);

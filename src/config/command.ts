@@ -11,6 +11,7 @@ export default [
     'queue',
     'remove',
     
+    'clearQueue',
 
     'sayAhaha',
     'playAhaha',

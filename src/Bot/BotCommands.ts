@@ -75,7 +75,11 @@ export default abstract class BotCommands {
 
 
     public current() {
-        console.log('current');
+        const song: Song | undefined = this.guild.getCurrentSong();
+
+        if(song == undefined) { this.msg.reply('No more songs'); return; }
+
+        // this.messageEmded.current(this.msg, this.guild.getCurrentSong(), this.guild.currentIndex, this.guild.currentSeconds);
     }
 
 
@@ -115,7 +119,18 @@ export default abstract class BotCommands {
         this.guild.removeSong(index);
         this.messageEmded.deletedSong(this.msg, song);
 
-        if(this.guild.currentIndex == index) this.guild.stop();
+        if(this.guild.currentIndex == index) {
+            this.guild.stop();
+            let nextSong: Song | undefined = this.guild.nextSong();
+            if(nextSong) this.guild.play(nextSong);
+        }
+    }
+
+
+    public clearQueue(): void {
+        this.guild.queue = [];
+        this.guild.stop();
+        this.messageEmded.clearQueue(this.msg);
     }
 
 
