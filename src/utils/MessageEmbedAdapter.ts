@@ -36,32 +36,36 @@ export default class MessageEmbedAdapter{
         this.messageWithDescription(msg, `I **don't have** song anymore`);
     }
 
-    public joinVoiceChannelWarning(msg: Discord.Message){
+    public joinVoiceChannelWarning(msg: Discord.Message): void{
         this.messageWithDescription(msg, `Before playing you should **join to voice channel**`);
     }
 
-    public dispatcherProblem(msg: Discord.Message){
+    public dispatcherProblem(msg: Discord.Message): void{
         this.messageWithDescription(msg, `Problems with dispather`);
     }
 
-    public playError(msg: Discord.Message, song: Song){
+    public playError(msg: Discord.Message, song: Song): void{
         this.messageWithDescription(msg, `Error when trying to play song ${song.name}`);
     }
 
-    public unexpectedIndex(msg: Discord.Message, len: number){
+    public unexpectedIndex(msg: Discord.Message, len: number): void{
         this.messageWithDescription(msg, `Index must be from **1** to **${len}**`);
     }
 
-    public deletedSong(msg: Discord.Message, song: Song){
+    public removedSong(msg: Discord.Message, song: Song): void{
         this.messageWithDescription(msg, `Song: **${song.name}** was removed`);
     }
 
-    public clearQueue(msg: Discord.Message){
+    public clearQueue(msg: Discord.Message): void{
         this.messageWithDescription(msg, `Queue has been **cleared**`);
     }
 
-    public firstSong(msg: Discord.Message){
+    public firstSong(msg: Discord.Message): void{
         this.messageWithDescription(msg, `Current song is already has index **1**`);
+    }
+
+    public jumpError(msg: Discord.Message, start: number, end: number): void {
+        this.messageWithDescription(msg, `**Unexpected** index of song. Index must be beetwen **${start}** - **${end}**`,);
     }
 
     

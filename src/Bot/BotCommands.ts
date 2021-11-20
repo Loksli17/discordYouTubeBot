@@ -92,7 +92,20 @@ export default abstract class BotCommands {
     }
 
     public jump(): void {
-        console.log('jump');
+        
+        let
+            index: number = 0,
+            song : Song | undefined;
+
+        index = Number(this.words[2]) - 1;
+        song  = this.guild.queue[index];
+
+        if(song == undefined){
+            this.messageEmded.jumpError(this.msg, 0, this.queue.length);
+        }
+
+        this.guild.currentIndex = index;
+        this.guild.play(song);
     }
 
 
@@ -137,11 +150,11 @@ export default abstract class BotCommands {
         }
 
         this.guild.removeSong(index);
-        this.messageEmded.deletedSong(this.msg, song);
+        this.messageEmded.removedSong(this.msg, song);
 
         if(this.guild.currentIndex == index) {
             this.guild.stop();
-            let nextSong: Song | undefined = this.guild.nextSong();
+            let nextSong: Song | undefined = this.guild.currentSong();
             if(nextSong) this.guild.play(nextSong);
         }
     }
